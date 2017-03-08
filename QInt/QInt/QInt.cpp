@@ -70,6 +70,16 @@ string QInt::truDec(string a, string b)
 	return c;
 }
 
+//gan bit tai vi tri pos = value
+void QInt::ganBit(int pos, int value)
+{
+	int i = pos / 8;
+	int j = pos % 8;
+
+	data[i] &= ~(1 << j);
+	data[i] |= (value << j);
+}
+
 QInt::QInt()
 {
 	for (int i = 0; i < 16; ++i)
@@ -131,7 +141,7 @@ string QInt::HexToBin(string hex)
 }
 
 //Lay bit tai vi tri pos
-char QInt::getBit(int pos)
+char QInt::getBit(int pos) const
 {
 	int i = pos / 8;
 	int j = pos % 8;
@@ -161,14 +171,47 @@ string QInt::getHex()
 	return string();
 }
 
+//lay so bu 2
+QInt QInt::layBu2() const
+{
+	QInt res;
+
+	for (int i = 0; i < 16; ++i)
+		res.data[i] = ~data[i];
+
+	int p = 0;
+	while (p < 16 && res.data[p] == -1) {
+		res.data[p] = 0;
+		p = p + 1;
+	}
+
+	if (p < 16) res.data[p] = res.data[p] + 1;
+
+	return res;
+}
+
 QInt QInt::operator+(const QInt & number) const
 {
-	return QInt();
+	QInt ketQua;
+	ketQua.coSo = number.coSo;
+
+	int carry = 0, pre_carry = 0;
+	for (int i = 0; i < 128; ++i) {
+		int sum = this->getBit(i) + number.getBit(i) + carry;
+		pre_carry = carry;
+		carry = (sum / 2);
+		ketQua.ganBit(i, sum % 2);
+	}
+
+	if (carry != pre_carry)
+		ketQua.coSo = -1;
+
+	return ketQua;
 }
 
 QInt QInt::operator-(const QInt & number) const
 {
-	return QInt();
+	return (*this + number.layBu2());
 }
 
 QInt QInt::operator*(const QInt & number) const

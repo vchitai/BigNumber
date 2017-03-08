@@ -43,6 +43,9 @@ private:
 	//Luu y: ca a va b deu phai cung la so nguyen duong
 	static string truDec(string a, string b);
 
+	//gan bit tai vi tri pos = value
+	void ganBit(int pos, int value);
+
 public:
 	QInt();
 	QInt(const QInt &number);
@@ -78,7 +81,7 @@ public:
 	string HexToBin(string hex);
 
 	//Lay bit tai vi tri pos
-	char getBit(int pos);
+	char getBit(int pos) const;
 
 	//ham lay bieu dien cua QInt hien tai thanh chuoi nhi phan (2)
 	//Luu y: cach bieu dien chuoi nhi phan <string> khac voi cach bieu dien nhi phan trong char data[16]
@@ -93,6 +96,9 @@ public:
 	//ham lay bieu dien cua QInt hien tai thanh chuoi thap luc phan (16)
 	//Luu y: tan dung ham BinToHex(), goi ham getBin() sau do su dung ham BinToHex
 	string getHex();
+
+	//lay so bu 2
+	QInt layBu2() const;
 
 	//Cac ham phep tinh tren QInt (thuc hien tren co so 2)
 	QInt operator + (const QInt& number) const;

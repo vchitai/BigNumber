@@ -102,6 +102,9 @@ public:
 
 	QInt& operator = (const QInt& number);
 
+	//Gan coSo = so
+	void SetCoSo(int so);
+
 	~QInt();
 };
 

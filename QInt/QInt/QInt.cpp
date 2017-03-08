@@ -62,7 +62,7 @@ string QInt::truDec(string a, string b)
 			borrow = 0;
 		c = char(sum + '0') + c;
 	}
-	
+
 	while (c.size() > 0 && c[0] == '0') {
 		c.erase(0, 1);
 	}
@@ -91,7 +91,7 @@ QInt::QInt(const QInt & number)
 //string luu bit cao nhat (bit 127) tai vi tri 0
 //char data[16] luu bit cao nhat (bit 127) o bit thu 7 cua data[15]
 void QInt::nhap()
-{	
+{
 }
 
 //Kiem tra so dang o co so nao,
@@ -99,6 +99,12 @@ void QInt::nhap()
 //Luu y: dung cac ham getBin(), getHex(), getDec() de xuat ra ket qua tuong ung
 void QInt::xuat()
 {
+	switch (coSo)
+	{
+	case 2: cout << getBin(); break;
+	case 10: cout << getDec(); break;
+	case 16: cout << getHex(); break;
+	}
 }
 
 //chuyen tu chuoi nhi phan (2) <bit> sang thap phan (10)
@@ -107,14 +113,38 @@ void QInt::xuat()
 //Nen tinh so mu sau cung.
 string QInt::BinToDec(string bin)
 {
-	return string();
+	string kq = "0";
+	for (int i = 127; i <= 0; i--)
+		if (bin[i] == 1)
+			kq = congDec(kq, luyThua2[i]);
+	if (bin[0] == 1)
+		kq = truDec(kq, luyThua2[127]);
+	return kq;
 }
 
 //chuyen tu chuoi nhi phan (2) <bit> sang thap luc phan (16)
 //Search ro hon ve chuyen tu nhi phan sang thap luc phan
 string QInt::BinToHex(string bin)
 {
-	return string();
+	string binary[16] = { "0000", "0001", "0010", "0011", "0100", "0101", "0110", "0111", "1000", "1001", "1010", "1011", "1100", "1101", "1110", "1111" };
+	string kq = "";
+	string t = "";
+
+	for (int i = 0; i <32; i++)
+	{
+		t = "";
+		for (int k = 0; k < 4; k++)
+			t += bin[i * 4 + k];
+		int j = 0;
+		for (j = 0; j < 16; j++)
+			if (t == binary[j])
+				break;
+		if (j < 10)
+			kq += j + '0';
+		else kq += j % 10 + 'A';
+	}
+
+	return kq;
 }
 
 //chuyen tu chuoi thap phan (10) <dec> sang nhi phan (2)
@@ -144,21 +174,24 @@ char QInt::getBit(int pos)
 //char data[16] luu bit cao nhat o bit thu 7 cua data[15]
 string QInt::getBin()
 {
-	return string();
+	string kq = "";
+	for (int i = 0; i < 128; i++)
+		kq += (getBit(127 - i) + '0');
+	return kq;
 }
 
 //ham lay bieu dien cua QInt hien tai thanh chuoi thap phan (10) 
 //Luu y: tan dung ham BinToDec(), goi ham getBin() sau do su dung ham BinToDec
 string QInt::getDec()
 {
-	return string();
+	return BinToDec(getBin());
 }
 
 //ham lay bieu dien cua QInt hien tai thanh chuoi thap luc phan (16)
 //Luu y: tan dung ham BinToHex(), goi ham getBin() sau do su dung ham BinToHex
 string QInt::getHex()
 {
-	return string();
+	return BinToHex(getBin());
 }
 
 QInt QInt::operator+(const QInt & number) const
@@ -187,6 +220,11 @@ QInt & QInt::operator=(const QInt & number)
 		data[i] = number.data[i];
 	coSo = number.coSo;
 	return *this;
+}
+
+void QInt::SetCoSo(int so)
+{
+	coSo = so;
 }
 
 QInt::~QInt()

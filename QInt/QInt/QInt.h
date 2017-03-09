@@ -100,6 +100,12 @@ public:
 	//lay so bu 2
 	QInt layBu2() const;
 
+	//thuc hien phep dich bit qua trai
+	QInt shiftLeft() const;
+
+	//thuc hien phep dich bit qua phai
+	QInt shiftRight() const;
+
 	//Cac ham phep tinh tren QInt (thuc hien tren co so 2)
 	QInt operator + (const QInt& number) const;
 	QInt operator - (const QInt& number) const;

@@ -1,2 +1,4 @@
 ﻿  Source.cpp
-  QInt.vcxproj -> C:\Users\TONTHATVINH\Desktop\BigNumber\QInt\Debug\QInt.exe
+  QInt.cpp
+  Generating Code...
+c:\users\tonthatvinh\desktop\bignumber\qint\qint\qint.cpp(232): error C4716: 'QInt::operator*': must return a value

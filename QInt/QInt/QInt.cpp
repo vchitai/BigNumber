@@ -175,6 +175,7 @@ string QInt::getHex()
 QInt QInt::layBu2() const
 {
 	QInt res;
+	res.coSo = this->coSo;
 
 	for (int i = 0; i < 16; ++i)
 		res.data[i] = ~data[i];
@@ -187,6 +188,40 @@ QInt QInt::layBu2() const
 
 	if (p < 16) res.data[p] = res.data[p] + 1;
 
+	return res;
+}
+
+//thuc hien phep dich bit qua trai
+QInt QInt::shiftLeft() const
+{
+	QInt res = *this;
+
+	int preBit = 0;
+	for (int i = 0; i < 16; ++i) {
+		int current_bit = ((res.data[i] >> 7) & 1);
+		res.data[i] <<= 1;
+		res.data[i] |= preBit;
+		preBit = current_bit;
+	}
+	res.ganBit(127, preBit);
+
+	return res;
+}
+
+//thuc hien phep dich bit qua phai
+QInt QInt::shiftRight() const
+{
+	QInt res = *this;
+
+	int preBit = res.getBit(127);
+	for (int i = 15; i >= 0; ++i) {
+		int current_bit = (res.data[i] & 1);
+		res.data[i] >>= 1;
+		res.data[i] &= ~(1 << 7);
+		res.data[i] |= (preBit << 7);
+		preBit = current_bit;
+	}
+	
 	return res;
 }
 
@@ -216,12 +251,87 @@ QInt QInt::operator-(const QInt & number) const
 
 QInt QInt::operator*(const QInt & number) const
 {
-	return QInt();
+	QInt a;
+	int pre_q = 0;
+	QInt m = number;
+	QInt q = *this;
+
+	for (int i = 128; i > 0; --i) {
+		int q0 = q.getBit(0);
+		if (pre_q != q0)
+			a = (pre_q == 0 ? a - m : a + m);
+
+		int last_bit = a.getBit(0);
+		a = a.shiftRight();
+		q = q.shiftRight();
+		q.ganBit(127, last_bit);
+		pre_q = q0;
+	}
+
+	int number_bit_0 = 0;
+	for (int i = 0; i < 128; ++i)
+		number_bit_0 += (1 - a.getBit(i));
+
+	if (number_bit_0 != 0 && number_bit_0 != 128) {
+		q.coSo = -1;
+		return q;
+	}
+
+	if (number_bit_0 == 0) {
+		q = q.layBu2();
+		if (q.getBit(127) == 1) {
+			q.coSo = -1;
+			return q;
+		}
+		else
+			return q.layBu2();
+	}
+
+	if (number_bit_0 == 128) {
+		if (q.getBit(127) == 0)
+			return q;
+		else {
+			q.coSo = -1;
+			return q;
+		}
+	}
+
+	return q;
 }
 
 QInt QInt::operator/(const QInt & number) const
 {
-	return QInt();
+	int sign_a = this->getBit(127);
+	int sign_b = number.getBit(127);
+
+	QInt q = *this;
+	QInt m = number;
+	QInt a;
+
+	if (sign_a) 
+		q = q.layBu2();
+	if (sign_b)
+		m = m.layBu2();
+
+	for (int i = 128; i > 0; --i) {
+		int mb = q.getBit(127);
+		a = a.shiftLeft();
+		q = q.shiftLeft();
+		a.ganBit(0, mb);
+
+		a = a - m;
+		if (a.getBit(127) == 1) {
+			a = a + m;
+			q.ganBit(0, 0);
+		}
+		else
+			q.ganBit(0, 1);
+	}
+
+	if (sign_a != sign_b)
+		q = q.layBu2();
+
+	return q;
 }
 
 QInt & QInt::operator=(const QInt & number)

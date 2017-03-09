@@ -131,13 +131,51 @@ string QInt::BinToHex(string bin)
 //Luu y dau cua so thap phan, chuyen ve chuoi nhi phan chuan
 string QInt::DecToBin(string dec)
 {
-	return string();
+	string bin = "";
+	int luyThua2size = luyThua2.size();
+	for (int i = luyThua2.size() - 1; i > 0; i--) {
+		if (cmp(dec, luyThua2[i]) == 1) {
+			dec = truDec(dec, luyThua2[i]);
+			bin.append("1");
+		}
+		else {
+			bin.append("0");
+		}
+	}
+	return bin;
 }
 
 //chuyen tu chuoi thap luc phan (16) <hex> sang nhi phan (2)
 string QInt::HexToBin(string hex)
 {
-	return string();
+	string bin = "";
+	for (int i = 0; i < hex.length(); ++i) {
+		switch (hex[i]) {
+			case '0': bin.append("0000"); break;
+			case '1': bin.append("0001"); break;
+			case '2': bin.append("0010"); break;
+			case '3': bin.append("0011"); break;
+			case '4': bin.append("0100"); break;
+			case '5': bin.append("0101"); break;
+			case '6': bin.append("0110"); break;
+			case '7': bin.append("0111"); break;
+			case '8': bin.append("1000"); break;
+			case '9': bin.append("1001"); break;
+			case 'a':
+			case 'A': bin.append("1010"); break;
+			case 'b':
+			case 'B': bin.append("1011"); break;
+			case 'c':
+			case 'C': bin.append("1100"); break;
+			case 'd': 
+			case 'D': bin.append("1101"); break;
+			case 'e':
+			case 'E': bin.append("1110"); break;
+			case 'f':
+			case 'F': bin.append("1111"); break;
+		}
+	}
+	return bin;
 }
 
 //Lay bit tai vi tri pos

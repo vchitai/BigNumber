@@ -4,6 +4,7 @@
 class Calculator
 {
 private:
+	//Calculator luu 1 so ans tren man hinh
 	QInt ans;
 public:
 	//Khoi tao mac dinh ans = 0
@@ -12,14 +13,15 @@ public:
 	//Goi QInt.Nhap(), trong QInt.Nhap() co chon he so
 	void NhapAns();
 
+	//Hien thi so ans theo co so cua no
 	void XuatAns();
 
-	//Cac Ham DoiSangHeSo() doi coSo trong QInt
+	//Cac Ham DoiSangHeSo() doi coSo cua ans
 	void DoiSangHeBin();
 	void DoiSangHeDec();
 	void DoiSangHeHex();
 
-	//Cac Ham tinh toan yeu cau:
+	//Cac Ham tinh toan:
 	//	nhap vao mot doi so
 	//	tinh kq
 	//	ans <- kq
@@ -27,8 +29,6 @@ public:
 	void Tru();
 	void Nhan();
 	void Chia();
-
-	void Start();
 };
 
-void Calculator_main();
+void Calculator_Start();

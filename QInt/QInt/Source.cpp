@@ -11,7 +11,7 @@ int main() {
 	//	printf("Bit vi tri %d = %c\n", i, a.getBit(i) + '0');
 	//printf("\n");
 
-	Calculator_main();
+	Calculator_Start();
 
 	//cout << a.getBin() << endl;
 	//return 0;

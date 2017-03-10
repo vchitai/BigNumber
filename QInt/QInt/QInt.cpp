@@ -129,10 +129,10 @@ QInt::QInt(const QInt & number)
 string QInt::BinToDec(string bin)
 {
 	string kq = "0";
-	for (int i = 127; i <= 0; i--)
-		if (bin[i] == 1)
-			kq = congDec(kq, luyThua2[i]);
-	if (bin[0] == 1)
+	for (int i = 127; i >= 0; i--)
+		if (bin[i] == '1')
+			kq = congDec(kq, luyThua2[127 - i]);
+	if (bin[0] == '1')
 		kq = truDec(kq, luyThua2[127]);
 	return kq;
 }

@@ -18,14 +18,14 @@ void Calculator::initMainMenu() {
 void Calculator::initQIntMenu() {
 	if (QintMenu.size() > 0)
 		return;
-	QintMenu.push_back(Command('B', "Chuyen sang he BIN"));
+	QintMenu.push_back(Command('N', "Chuyen sang he BIN"));
 	QintMenu.push_back(Command('H', "Chuyen sang he HEX"));
-	QintMenu.push_back(Command('D', "Chuyen sang he DEC"));
+	QintMenu.push_back(Command('T', "Chuyen sang he DEC"));
 	QintMenu.push_back(Command('+', "Cong"));
 	QintMenu.push_back(Command('-', "Tru"));
 	QintMenu.push_back(Command('*', "Nhan"));
 	QintMenu.push_back(Command('/', "Chia"));
-	QintMenu.push_back(Command('E', "Thoat"));
+	QintMenu.push_back(Command('Q', "Thoat"));
 }
 
 void Calculator::initQFloatMenu() {
@@ -63,12 +63,12 @@ int Calculator::handleQIntCommand(string input)
 	{
 		switch (input[0])
 		{
-		case 'D':
-		case 'd':
+		case 'T':
+		case 't':
 			DoiSangHeDec();
 			break;
-		case 'B':
-		case 'b':
+		case 'N':
+		case 'n':
 			DoiSangHeBin();
 			break;
 		case 'H':
@@ -95,10 +95,12 @@ int Calculator::handleQIntCommand(string input)
 			Chia(soHang);
 			break;
 		}
-		case 'E':
-		case 'e':
+		case 'Q':
+		case 'q':
 			return -1;
 		default:
+			if (isNhapOk(input))
+				ans = nhapInt(input);
 			break;
 		}
 		return 0;

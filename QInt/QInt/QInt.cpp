@@ -5,7 +5,7 @@ const vector <string> QInt::khoiTaoLuyThua2() {
 	res.clear();
 
 	res.push_back("1");
-	for (int i = 1; i < 128; ++i) {
+	for (int i = 1; i < MAX_BITS; ++i) {
 		res.push_back(congDec(res[i - 1], res[i - 1]));
 	}
 
@@ -84,14 +84,29 @@ QInt::QInt()
 {
 	for (int i = 0; i < 16; ++i)
 		data[i] = 0;
-	coSo = 2;
+	coSo = DEC;
 }
 
-QInt::QInt(const QInt & number)
-{
-	for (int i = 0; i < 16; ++i)
-		data[i] = number.data[i];
-	coSo = number.coSo;
+QInt::QInt(int so, string input) {
+	string realValue;
+	setCoSo(so);
+
+	switch (coSo)
+	{
+	case BIN: realValue = NormalizeBin(input); break;
+	case DEC: realValue = DecToBin(input); break;
+	case HEX: realValue = NormalizeBin(HexToBin(input)); break;
+	default: break;
+	}
+
+	if (realValue.size() != 0) {
+		for (int i = 0; i < realValue.size(); i++)
+			if (realValue[127 - i] == '1')
+				ganBit(i, 1);
+			else
+				ganBit(i, 0);
+	}
+
 }
 
 //Check xem nguoi dung nhap cac he 2, 10 hay 16, luu tru vao coSo
@@ -100,21 +115,11 @@ QInt::QInt(const QInt & number)
 //Luu y: cach bieu dien chuoi nhi phan <string> khac voi cach bieu dien nhi phan trong char data[16]
 //string luu bit cao nhat (bit 127) tai vi tri 0
 //char data[16] luu bit cao nhat (bit 127) o bit thu 7 cua data[15]
-void QInt::nhap()
+QInt::QInt(const QInt & number)
 {
-}
-
-//Kiem tra so dang o co so nao,
-//Xuat ket qua ra man hinh theo co so tuong ung.
-//Luu y: dung cac ham getBin(), getHex(), getDec() de xuat ra ket qua tuong ung
-void QInt::xuat()
-{
-	switch (coSo)
-	{
-	case 2: cout << getBin(); break;
-	case 10: cout << getDec(); break;
-	case 16: cout << getHex(); break;
-	}
+	for (int i = 0; i < 16; ++i)
+		data[i] = number.data[i];
+	coSo = number.coSo;
 }
 
 //chuyen tu chuoi nhi phan (2) <bit> sang thap phan (10)
@@ -161,13 +166,63 @@ string QInt::BinToHex(string bin)
 //Luu y dau cua so thap phan, chuyen ve chuoi nhi phan chuan
 string QInt::DecToBin(string dec)
 {
-	return string();
+	string bin = "";
+	for (int i = luyThua2.size() - 1; i >= 0; i--) {
+		if (cmp(dec, luyThua2[i]) != -1) {
+			dec = truDec(dec, luyThua2[i]);
+			bin.append("1");
+		}
+		else {
+			bin.append("0");
+		}
+	}
+	return bin;
 }
 
 //chuyen tu chuoi thap luc phan (16) <hex> sang nhi phan (2)
 string QInt::HexToBin(string hex)
 {
-	return string();
+	string bin = "";
+	for (int i = 0; i < hex.length(); ++i) {
+		switch (hex[i]) {
+		case '0': bin.append("0000"); break;
+		case '1': bin.append("0001"); break;
+		case '2': bin.append("0010"); break;
+		case '3': bin.append("0011"); break;
+		case '4': bin.append("0100"); break;
+		case '5': bin.append("0101"); break;
+		case '6': bin.append("0110"); break;
+		case '7': bin.append("0111"); break;
+		case '8': bin.append("1000"); break;
+		case '9': bin.append("1001"); break;
+		case 'a':
+		case 'A': bin.append("1010"); break;
+		case 'b':
+		case 'B': bin.append("1011"); break;
+		case 'c':
+		case 'C': bin.append("1100"); break;
+		case 'd':
+		case 'D': bin.append("1101"); break;
+		case 'e':
+		case 'E': bin.append("1110"); break;
+		case 'f':
+		case 'F': bin.append("1111"); break;
+		}
+	}
+	return bin;
+}
+
+//chuan hoa BIN
+string QInt::NormalizeBin(string bin) {
+	string res = "";
+	for (int i = 0; i < MAX_BITS; i++)
+		res.append("0");
+	int resSize = res.size();
+	int binSize = bin.size();
+	for (int i = 0; i < binSize; i++)
+		res[resSize - binSize + i] = bin[i];
+
+	return res;
 }
 
 //Lay bit tai vi tri pos
@@ -375,9 +430,13 @@ QInt & QInt::operator=(const QInt & number)
 	return *this;
 }
 
-void QInt::SetCoSo(int so)
+void QInt::setCoSo(int so)
 {
 	coSo = so;
+}
+
+int QInt::getCoSo() {
+	return coSo;
 }
 
 QInt::~QInt()

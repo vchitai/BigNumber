@@ -1,4 +1,10 @@
-﻿  Source.cpp
-  QInt.cpp
-  Generating Code...
-c:\users\tonthatvinh\desktop\bignumber\qint\qint\qint.cpp(232): error C4716: 'QInt::operator*': must return a value
+﻿  Calculator.cpp
+c:\codes\visual studio\bignumber\qint\qint\calculator.cpp(38): warning C4018: '<': signed/unsigned mismatch
+c:\codes\visual studio\bignumber\qint\qint\calculator.cpp(118): warning C4018: '<': signed/unsigned mismatch
+c:\codes\visual studio\bignumber\qint\qint\calculator.cpp(123): warning C4018: '<': signed/unsigned mismatch
+c:\codes\visual studio\bignumber\qint\qint\calculator.cpp(128): warning C4018: '<': signed/unsigned mismatch
+c:\codes\visual studio\bignumber\qint\qint\calculator.cpp(154): warning C4018: '<': signed/unsigned mismatch
+c:\codes\visual studio\bignumber\qint\qint\calculator.cpp(179): warning C4715: 'Calculator::xuatAns': not all control paths return a value
+c:\codes\visual studio\bignumber\qint\qint\calculator.cpp(198): warning C4715: 'Calculator::xuatInt': not all control paths return a value
+  QInt.vcxproj -> C:\Codes\Visual Studio\BigNumber\QInt\Debug\QInt.exe
+  QInt.vcxproj -> C:\Codes\Visual Studio\BigNumber\QInt\Debug\QInt.pdb (Full PDB)

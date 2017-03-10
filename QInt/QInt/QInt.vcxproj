@@ -142,9 +142,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Calculator.h" />
     <ClInclude Include="QInt.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Calculator.cpp" />
+    <ClCompile Include="Calculator_Start.cpp" />
     <ClCompile Include="QInt.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>

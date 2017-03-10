@@ -8,6 +8,11 @@
 #include <vector>
 using namespace std;
 
+#define BIN 2
+#define DEC 10
+#define HEX 16
+#define MAX_BITS 128
+
 class QInt
 {
 private:
@@ -56,12 +61,7 @@ public:
 	//Luu y: cach bieu dien chuoi nhi phan <string> khac voi cach bieu dien nhi phan trong char data[16]
 	//string luu bit cao nhat (bit 127) tai vi tri 0
 	//char data[16] luu bit cao nhat (bit 127) o bit thu 7 cua data[15]
-	void nhap();
-
-	//Kiem tra so dang o co so nao,
-	//Xuat ket qua ra man hinh theo co so tuong ung.
-	//Luu y: dung cac ham getBin(), getHex(), getDec() de xuat ra ket qua tuong ung
-	void xuat();
+	QInt(int so, string input);
 
 	//chuyen tu chuoi nhi phan (2) <bit> sang thap phan (10)
 	//Luu y: So co dau, bit dau tien luu dau
@@ -79,6 +79,9 @@ public:
 
 	//chuyen tu chuoi thap luc phan (16) <hex> sang nhi phan (2)
 	string HexToBin(string hex);
+
+	//chuan hoa BIN
+	string NormalizeBin(string bin);
 
 	//Lay bit tai vi tri pos
 	char getBit(int pos) const;
@@ -115,7 +118,9 @@ public:
 	QInt& operator = (const QInt& number);
 
 	//Gan coSo = so
-	void SetCoSo(int so);
+	void setCoSo(int so);
+	//Lay coSo
+	int getCoSo();
 
 	~QInt();
 };

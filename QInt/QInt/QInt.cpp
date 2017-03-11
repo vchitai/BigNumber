@@ -129,7 +129,7 @@ QInt::QInt(const QInt & number)
 string QInt::BinToDec(string bin)
 {
 	string kq = "0";
-	for (int i = 127; i >= 0; i--)
+	for (int i = 127; i > 0; i--)
 		if (bin[i] == '1')
 			kq = congDec(kq, luyThua2[127 - i]);
 	if (bin[0] == '1')
@@ -396,6 +396,14 @@ QInt QInt::operator/(const QInt & number) const
 	QInt m = number;
 	QInt a;
 
+	int number_bit_0 = 0;
+	for (int i = 0; i < 128; ++i)
+		number_bit_0 += (1 - number.getBit(i));
+	if (number_bit_0 == 128) {
+		q.coSo = -2;
+		return q;
+	}
+
 	if (sign_a) 
 		q = q.layBu2();
 	if (sign_b)
@@ -403,8 +411,10 @@ QInt QInt::operator/(const QInt & number) const
 
 	for (int i = 128; i > 0; --i) {
 		int mb = q.getBit(127);
+		int temp = q.getBit(126);
 		a = a.shiftLeft();
 		q = q.shiftLeft();
+		q.ganBit(127, temp);
 		a.ganBit(0, mb);
 
 		a = a - m;
@@ -412,8 +422,9 @@ QInt QInt::operator/(const QInt & number) const
 			a = a + m;
 			q.ganBit(0, 0);
 		}
-		else
+		else {
 			q.ganBit(0, 1);
+		}
 	}
 
 	if (sign_a != sign_b)

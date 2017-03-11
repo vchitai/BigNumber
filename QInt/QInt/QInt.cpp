@@ -302,7 +302,7 @@ QInt QInt::shiftRight() const
 	QInt res = *this;
 
 	int preBit = res.getBit(127);
-	for (int i = 15; i >= 0; ++i) {
+	for (int i = 15; i >= 0; --i) {
 		int current_bit = (res.data[i] & 1);
 		res.data[i] >>= 1;
 		res.data[i] &= ~(1 << 7);

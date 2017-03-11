@@ -1,10 +1,5 @@
-﻿  Calculator.cpp
-c:\codes\visual studio\bignumber\qint\qint\calculator.cpp(38): warning C4018: '<': signed/unsigned mismatch
-c:\codes\visual studio\bignumber\qint\qint\calculator.cpp(120): warning C4018: '<': signed/unsigned mismatch
-c:\codes\visual studio\bignumber\qint\qint\calculator.cpp(125): warning C4018: '<': signed/unsigned mismatch
-c:\codes\visual studio\bignumber\qint\qint\calculator.cpp(130): warning C4018: '<': signed/unsigned mismatch
-c:\codes\visual studio\bignumber\qint\qint\calculator.cpp(156): warning C4018: '<': signed/unsigned mismatch
-c:\codes\visual studio\bignumber\qint\qint\calculator.cpp(181): warning C4715: 'Calculator::xuatAns': not all control paths return a value
-c:\codes\visual studio\bignumber\qint\qint\calculator.cpp(200): warning C4715: 'Calculator::xuatInt': not all control paths return a value
-  QInt.vcxproj -> C:\Codes\Visual Studio\BigNumber\QInt\Debug\QInt.exe
-  QInt.vcxproj -> C:\Codes\Visual Studio\BigNumber\QInt\Debug\QInt.pdb (Full PDB)
+﻿  QInt.cpp
+c:\users\vinh ton that\desktop\bignumber\qint\qint\qint.cpp(103): warning C4018: '<': signed/unsigned mismatch
+c:\users\vinh ton that\desktop\bignumber\qint\qint\qint.cpp(186): warning C4018: '<': signed/unsigned mismatch
+  QInt.vcxproj -> C:\Users\Vinh Ton That\Desktop\BigNumber\QInt\Debug\QInt.exe
+  QInt.vcxproj -> C:\Users\Vinh Ton That\Desktop\BigNumber\QInt\Debug\QInt.pdb (Full PDB)

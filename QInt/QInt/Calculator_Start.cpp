@@ -13,7 +13,7 @@ void Calculator_Start()
 	{
 		system("cls");
 		cal.xuatLoi();
-		cout << "Calculator\n";
+		cout << "CALCULATOR ----- FX - 69696969\n";
 		cout << "\t" << cal.xuatAns() << endl;
 		int coSo = cal.getCoSo();
 		cout << "Current Numeral System: " << (coSo == BIN? "BIN" : (coSo == DEC? "DEC" : "HEX")) << endl;

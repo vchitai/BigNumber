@@ -167,7 +167,16 @@ string QInt::BinToHex(string bin)
 string QInt::DecToBin(string dec)
 {
 	string bin = "";
-	for (int i = luyThua2.size() - 1; i >= 0; i--) {
+	int i = luyThua2.size() - 1;
+	int dau = 0;
+	if (dec[0] == '-') {
+		i--;
+		dau = 1;
+		for (int i = 0; i < dec.size() - 1; i++)
+			dec[i] = dec[i + 1];
+		dec.pop_back();
+	}
+	for (; i >= 0; i--) {
 		if (cmp(dec, luyThua2[i]) != -1) {
 			dec = truDec(dec, luyThua2[i]);
 			bin.append("1");
@@ -175,6 +184,10 @@ string QInt::DecToBin(string dec)
 		else {
 			bin.append("0");
 		}
+	}
+	if (dau == 1) {
+		QInt res(2, bin);
+		bin = res.layBu2().getBin();
 	}
 	return bin;
 }

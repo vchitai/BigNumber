@@ -119,19 +119,34 @@ bool Calculator::isNhapOk(string input) {
 	case BIN:
 		for (int i = 0; i < input.size(); i++)
 			if (input[i] != '0' && input[i] != '1')
+			{
+				Error.push_back(ERROR_INVALID_INPUT);
 				return false;
+			}
 		break;
 	case DEC:
-		for (int i = 0; i < input.size(); i++)
+	{
+		int i = 0;
+		if (input[i] == '-')
+			i++;
+		for (; i < input.size(); i++)
 			if (input[i] < '0' || input[i] > '9')
+			{
+				Error.push_back(ERROR_INVALID_INPUT);
 				return false;
+			}
 		break;
+	}
 	case HEX:
 		for (int i = 0; i < input.size(); i++)
 			if ((input[i] < '0' || input[i] > '9') && (input[i] < 'A' || input[i] > 'F') && (input[i] < 'a' || input[i] > 'f'))
+			{
+				Error.push_back(ERROR_INVALID_INPUT);
 				return false;
+			}
 		break;
 	default:
+		Error.push_back(ERROR_INVALID_INPUT);
 		return false;
 		break;
 	}
@@ -146,7 +161,6 @@ QInt Calculator::nhapSoHang2() {
 	if (isNhapOk(input2)) {
 		return QInt(coSo, input2);
 	} else {
-		Error.push_back(ERROR_1);
 		return QInt();
 	}
 }
@@ -156,8 +170,14 @@ void Calculator::xuatLoi() {
 		for (int i = 0; i<Error.size(); i++)
 			switch (Error[i])
 			{
-			case ERROR_1:
-				cout << "Invalid Number Input" << endl;
+			case ERROR_INVALID_INPUT:
+				cout << "Invalid Input" << endl;
+				break;
+			case ERROR_DIVIDE_BY_0:
+				cout << "Division by 0" << endl;
+				break;
+			case ERROR_BUFFER_OVERFLOW:
+				cout << "Buffer Overflow" << endl;
 				break;
 			default:
 				break;
@@ -237,6 +257,10 @@ void Calculator::Cong(QInt soHang)
 {
 	if (Error.empty())
 		ans = ans + soHang;
+	if (ans.getCoSo() == -1) {
+		Error.push_back(ERROR_BUFFER_OVERFLOW);
+		ans = QInt();
+	}
 }
 
 
@@ -244,6 +268,10 @@ void Calculator::Tru(QInt soHang)
 {
 	if (Error.empty())
 		ans = ans - soHang;
+	if (ans.getCoSo() == -1) {
+		Error.push_back(ERROR_BUFFER_OVERFLOW);
+		ans = QInt();
+	}
 }
 
 
@@ -251,6 +279,10 @@ void Calculator::Nhan(QInt soHang)
 {
 	if (Error.empty())
 		ans = ans * soHang;
+	if (ans.getCoSo() == -1) {
+		Error.push_back(ERROR_BUFFER_OVERFLOW);
+		ans = QInt();
+	}
 }
 
 
@@ -258,6 +290,13 @@ void Calculator::Chia(QInt soHang)
 {
 	if (Error.empty())
 		ans = ans / soHang;
+	if (ans.getCoSo() == -2) {
+		Error.push_back(ERROR_DIVIDE_BY_0);
+		ans = QInt();
+	} else if (ans.getCoSo() == -1) {
+			Error.push_back(ERROR_BUFFER_OVERFLOW);
+			ans = QInt();
+	}
 }
 
 int Calculator::getCoSo()

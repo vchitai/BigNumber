@@ -5,7 +5,9 @@
 #define QINT_MENU 3
 #define QFLOAT_MENU 5
 
-#define ERROR_1 101
+#define ERROR_INVALID_INPUT 101
+#define ERROR_DIVIDE_BY_0 102
+#define ERROR_BUFFER_OVERFLOW 103
 
 struct Command {
 	char commandId;

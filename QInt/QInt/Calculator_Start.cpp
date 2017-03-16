@@ -12,8 +12,9 @@ void Calculator_Start()
 	do
 	{
 		system("cls");
+		system("Color FC");
 		cal.xuatLoi();
-		cout << "CALCULATOR ----- FX - 69696969\n";
+		cout << "CALCULATOR\n";
 		cout << "\t" << cal.xuatAns() << endl;
 		int coSo = cal.getCoSo();
 		cout << "Current Numeral System: " << (coSo == BIN? "BIN" : (coSo == DEC? "DEC" : "HEX")) << endl;

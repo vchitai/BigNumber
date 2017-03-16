@@ -1,14 +1,13 @@
 #pragma once
-#include <iostream>
-#include <stdio.h>
-#include <algorithm>
-#include <math.h>
-#include <string.h>
-#include <string>
-#include <vector>
+#include "QInt.h"
 using namespace std;
 
-#define MAX_BITS 128
+#define BIAS 16383
+#define SIGN 112
+#define EXPO 15
+#define LIMIT_DEC_EXPO_OVERFLOW -4965
+#define LIMIT_DEC_EXPO_STANDARD 4931
+
 /*
 Truong define may cai gioi han vo day
 */
@@ -29,11 +28,27 @@ private:
 	//112 bit cuoi: luu gia tri cua significant
 	//...
 	char data[16];
+	//Co So de bao loi
+	int coSo;
 
 private:
-
+	//chuyen sang String
+	string toString(int dec);
+	//doi so de khoi tao
+	SoThapPhan valueOf(string thapPhan, string mu);
 	//gan bit tai vi tri pos = value
 	void ganBit(int pos, int value);
+
+	//ham so sanh tren he 10, ho tro hai ham cong va tru tren co so 10
+	static int cmp(string a, string b);
+
+	//a + b (tinh o he co so 10)
+	//Luu y: ca a va b deu phai cung la so nguyen duong
+	static string congDec(string a, string b);
+
+	// a - b (tinh o he co so 10)
+	//Luu y: ca a va b deu phai cung la so nguyen duong
+	static string truDec(string a, string b);
 
 	//Tai
 	//ham chuan hoa gia tri nhap vao ve dang a.bcd * 10 ^ x.
@@ -45,6 +60,7 @@ private:
 	//soMu nho nen chuyen soMu ve dang so nguyen roi cong tru tren soMu luon
 	void chuanHoaDec(string &soThapPhan, string &soMu);
 
+	void chuanHoaThapPhanBin(string &bin);
 public:
 	QFloat();
 	QFloat(const QFloat &number);
@@ -72,7 +88,10 @@ public:
 	//Ham chuyen tu dec sang day bin
 	//Ham QFloat co goi ham nay thi sau khi chuan hoa, 2 string trong QFloat co the chuyen ve SoThapPhan de luu
 	//Luu y: 15 bit luu so mu bieu dien o dang so Bias
+	//Dang Chuan
 	string DecToBin(SoThapPhan dec);
+	//Dang Khong Chuan
+	string DecToBinU(SoThapPhan dec);
 
 	//Lay bit tai vi tri pos
 	char getBit(int pos);

@@ -1,4 +1,4 @@
-### Big Number
+# Big Number
 
 ## Synopsis
 

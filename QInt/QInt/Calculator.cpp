@@ -35,7 +35,7 @@ void Calculator::initQFloatMenu() {
 
 //In Menu
 void Calculator::printMenu(vector<Command> cm) {
-	for (int i = 0; i < cm.size(); i++)
+	for (int i = 0; i < (int)cm.size(); i++)
 		cout << "\t" << cm[i].commandId << ". " << cm[i].description << endl;
 }
 
@@ -117,7 +117,7 @@ bool Calculator::isNhapOk(string input) {
 	switch (coSo)
 	{
 	case BIN:
-		for (int i = 0; i < input.size(); i++)
+		for (int i = 0; i < (int)input.size(); i++)
 			if (input[i] != '0' && input[i] != '1')
 			{
 				Error.push_back(ERROR_INVALID_INPUT);
@@ -129,7 +129,7 @@ bool Calculator::isNhapOk(string input) {
 		int i = 0;
 		if (input[i] == '-')
 			i++;
-		for (; i < input.size(); i++)
+		for (; i < (int)input.size(); i++)
 			if (input[i] < '0' || input[i] > '9')
 			{
 				Error.push_back(ERROR_INVALID_INPUT);
@@ -138,7 +138,7 @@ bool Calculator::isNhapOk(string input) {
 		break;
 	}
 	case HEX:
-		for (int i = 0; i < input.size(); i++)
+		for (int i = 0; i < (int)input.size(); i++)
 			if ((input[i] < '0' || input[i] > '9') && (input[i] < 'A' || input[i] > 'F') && (input[i] < 'a' || input[i] > 'f'))
 			{
 				Error.push_back(ERROR_INVALID_INPUT);
@@ -167,7 +167,7 @@ QInt Calculator::nhapSoHang2() {
 
 void Calculator::xuatLoi() {
 	if (!Error.empty()) {
-		for (int i = 0; i<Error.size(); i++)
+		for (int i = 0; i<(int)Error.size(); i++)
 			switch (Error[i])
 			{
 			case ERROR_INVALID_INPUT:

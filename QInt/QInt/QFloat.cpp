@@ -10,6 +10,14 @@ void QFloat::ganBit(int pos, int value)
 	data[i] |= (value << j);
 }
 
+QFloat QFloat::BinToQFloat(string b) const
+{
+	QFloat kq;
+	for (int i = 0; i < (int)b.size(); ++i)
+		kq.ganBit(0, b[i] - '0');
+	return kq;
+}
+
 //ham so sanh tren he 10, ho tro hai ham cong va tru tren co so 10
 int QFloat::cmp(string a, string b)
 {
@@ -66,7 +74,7 @@ string QFloat::truDec(string a, string b)
 	return c;
 }
 
-string QFloat::toString(int dec) {
+string QFloat::toString(int dec) const {
 	string res;
 	while (dec > 0) {
 		res.push_back('0' + dec % 10);
@@ -87,7 +95,7 @@ string QFloat::toString(int dec) {
 void QFloat::chuanHoaDec(string & soThapPhan, string & soMu)
 {
 	int cham = -1;
-	for (int i = 0; i < soThapPhan.size(); i++)
+	for (int i = 0; i < (int)soThapPhan.size(); i++)
 		if (soThapPhan[i] == '.')
 			cham = i;
 	if (cham == -1)
@@ -129,7 +137,7 @@ SoThapPhan QFloat::valueOf(string thapPhan, string mu) {
 		dau = 1;
 	}
 	double sauDauPhay = 0;
-	for (; j < thapPhan.size(); j++) {
+	for (; j < (int)thapPhan.size(); j++) {
 		if (thapPhan[j] == '.')
 			break;
 		else {
@@ -152,12 +160,13 @@ SoThapPhan QFloat::valueOf(string thapPhan, string mu) {
 		dau = 1;
 	}
 	res.luyThua = 0;
-	for (; i < mu.size(); i++) {
+	for (; i < (int)mu.size(); i++) {
 		res.luyThua *= 10;
 		res.luyThua += mu[i] - '0';
 	}
 	if (dau == 1)
 		res.luyThua = -res.luyThua;
+	return res;
 }
 //Tai
 //Chuyen so dang (soThapPhan * 10 ^ soMu) ve dang bieu dien nhi phan
@@ -193,7 +202,7 @@ QFloat::QFloat(string soThapPhan, string soMu)
 //Sau do tinh 2 ^ luyThua => 10 ^ x, x len nen goi v1 = 10 ^ (phan thap phan cua x)
 //Nhan phan thap phan sau khi lay log de nhan voi v (y la v = v1 * v) 
 //Luu y: 15 bit luu so mu bieu dien o dang so Bias
-SoThapPhan QFloat::BinToDec(string bin)
+SoThapPhan QFloat::BinToDec(string bin) const
 {
 	return SoThapPhan();
 }
@@ -215,7 +224,7 @@ QFloat::~QFloat()
 //Ham QFloat co goi ham nay thi sau khi chuan hoa, 2 string trong QFloat co the chuyen ve SoThapPhan de luu
 //Luu y: 15 bit luu so mu bieu dien o dang so Bias
 //Dang chuan
-string QFloat::DecToBin(SoThapPhan dec)
+string QFloat::DecToBin(SoThapPhan dec) const
 {
 	char dau = '0';
 	if (dec.thapPhan < 0) {
@@ -278,7 +287,7 @@ string QFloat::DecToBinU(SoThapPhan dec)
 }
 
 //Lay bit tai vi tri pos
-char QFloat::getBit(int pos)
+char QFloat::getBit(int pos) const
 {
 	int i = pos / 8;
 	int j = pos % 8;
@@ -290,7 +299,7 @@ char QFloat::getBit(int pos)
 //Luu y: cach bieu dien chuoi nhi phan <string> khac voi cach bieu dien nhi phan trong char data[16]
 //string luu bit cao nhat tai vi tri 0
 //Luu y: 15 bit luu so mu bieu dien o dang so Bias
-string QFloat::getBin()
+string QFloat::getBin() const
 {
 	return string();
 }
@@ -300,27 +309,139 @@ string QFloat::getBin()
 //Luu y: tan dung ham BinToDec(), goi ham getBin() sau do su dung ham BinToDec
 //Luu y: 15 bit luu so mu bieu dien o dang so Bias
 
-string QFloat::getDec()
+string QFloat::getDec() const
 {
 	return string();
 }
 
-QFloat QFloat::operator+(const QFloat & number)
+QFloat QFloat::operator+(const QFloat & number) const
 {
-	return QFloat();
+	SoThapPhan a = this->BinToDec(this->getBin());
+	SoThapPhan b = number.BinToDec(number.getBin());
+
+	if (a.luyThua > b.luyThua)
+		swap(a, b);
+
+	if (a.luyThua + 10 < b.luyThua)
+		return BinToQFloat(DecToBin(b));
+
+	b.thapPhan *= pow(10, b.luyThua - a.luyThua);
+	b.luyThua = a.luyThua;
+
+	SoThapPhan kq;
+	kq.thapPhan = a.thapPhan + b.thapPhan;
+	kq.luyThua = a.luyThua;
+
+	int cnt = 0;
+	while (cnt++ < 10 && abs(kq.thapPhan) >= 10.0) {
+		kq.thapPhan /= 10;
+		kq.luyThua += 1;
+	}
+
+	cnt = 0;
+	while (cnt++ < 10 && abs(kq.thapPhan) < 0) {
+		kq.thapPhan *= 10;
+		kq.luyThua -= 1;
+	}
+
+	if (abs(kq.thapPhan) < 1e-10) {
+		kq.thapPhan = 0;
+		kq.luyThua = 0;
+	}
+
+	QFloat ketQua;
+	string temp = DecToBin(kq);
+	if (temp[0] == '#')
+		ketQua.coSo = -1;
+	else
+		ketQua = BinToQFloat(temp);
+
+	return ketQua;
 }
 
-QFloat QFloat::operator-(const QFloat & number)
+QFloat QFloat::operator-(const QFloat & number) const
 {
-	return QFloat();
+	QFloat b = number;
+	QFloat a = *this;
+
+	b.ganBit(0, 1 - b.getBit(0));
+	return a + b;
 }
 
-QFloat QFloat::operator*(const QFloat & number)
+QFloat QFloat::operator*(const QFloat & number) const
 {
-	return QFloat();
+	SoThapPhan a = this->BinToDec(this->getBin());
+	SoThapPhan b = number.BinToDec(number.getBin());
+
+	SoThapPhan kq;
+	kq.thapPhan = a.thapPhan * b.thapPhan;
+	kq.luyThua = a.luyThua + b.luyThua;
+
+	int cnt = 0;
+	while (cnt++ < 30 && abs(kq.thapPhan) >= 10.0) {
+		kq.thapPhan /= 10;
+		kq.luyThua += 1;
+	}
+
+	cnt = 0;
+	while (cnt++ < 30 && abs(kq.thapPhan) < 0) {
+		kq.thapPhan *= 10;
+		kq.luyThua -= 1;
+	}
+
+	if (abs(kq.thapPhan) < 1e-10) {
+		kq.thapPhan = 0;
+		kq.luyThua = 0;
+	}
+
+	QFloat ketQua;
+	string temp = DecToBin(kq);
+	if (temp[0] == '#')
+		ketQua.coSo = -1;
+	else
+		ketQua = BinToQFloat(temp);
+
+	return ketQua;
 }
 
-QFloat QFloat::operator/(const QFloat & number)
+QFloat QFloat::operator/(const QFloat & number) const
 {
-	return QFloat();
+	SoThapPhan a = this->BinToDec(this->getBin());
+	SoThapPhan b = number.BinToDec(number.getBin());
+
+	if (abs(b.thapPhan) < 1e-10) {
+		QFloat ketQua;
+		ketQua.coSo = -2;
+		return ketQua;
+	}
+
+	SoThapPhan kq;
+	kq.thapPhan = a.thapPhan / b.thapPhan;
+	kq.luyThua = a.luyThua - b.luyThua;
+
+	int cnt = 0;
+	while (cnt++ < 30 && abs(kq.thapPhan) >= 10.0) {
+		kq.thapPhan /= 10;
+		kq.luyThua += 1;
+	}
+
+	cnt = 0;
+	while (cnt++ < 30 && abs(kq.thapPhan) < 0) {
+		kq.thapPhan *= 10;
+		kq.luyThua -= 1;
+	}
+
+	if (abs(kq.thapPhan) < 1e-10) {
+		kq.thapPhan = 0;
+		kq.luyThua = 0;
+	}
+
+	QFloat ketQua;
+	string temp = DecToBin(kq);
+	if (temp[0] == '#')
+		ketQua.coSo = -1;
+	else
+		ketQua = BinToQFloat(temp);
+
+	return ketQua;
 }

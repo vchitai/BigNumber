@@ -100,7 +100,7 @@ QInt::QInt(int so, string input) {
 	}
 
 	if (realValue.size() != 0) {
-		for (int i = 0; i < realValue.size(); i++)
+		for (int i = 0; i < (int)realValue.size(); i++)
 			if (realValue[127 - i] == '1')
 				ganBit(i, 1);
 			else
@@ -172,7 +172,7 @@ string QInt::DecToBin(string dec)
 	if (dec[0] == '-') {
 		i--;
 		dau = 1;
-		for (int i = 0; i < dec.size() - 1; i++)
+		for (int i = 0; i < (int)dec.size() - 1; i++)
 			dec[i] = dec[i + 1];
 		dec.pop_back();
 	}
@@ -196,7 +196,7 @@ string QInt::DecToBin(string dec)
 string QInt::HexToBin(string hex)
 {
 	string bin = "";
-	for (int i = 0; i < hex.length(); ++i) {
+	for (int i = 0; i < (int)hex.length(); ++i) {
 		switch (hex[i]) {
 		case '0': bin.append("0000"); break;
 		case '1': bin.append("0001"); break;

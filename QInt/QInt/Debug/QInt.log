@@ -1,19 +1,4 @@
-﻿  Source.cpp
-  QInt.cpp
-c:\codes\visual studio\bignumber\qint\qint\qint.cpp(103): warning C4018: '<': signed/unsigned mismatch
-c:\codes\visual studio\bignumber\qint\qint\qint.cpp(175): warning C4018: '<': signed/unsigned mismatch
-c:\codes\visual studio\bignumber\qint\qint\qint.cpp(199): warning C4018: '<': signed/unsigned mismatch
-  QFloat.cpp
-  Calculator_Start.cpp
-  Calculator.cpp
-c:\codes\visual studio\bignumber\qint\qint\calculator.cpp(38): warning C4018: '<': signed/unsigned mismatch
-c:\codes\visual studio\bignumber\qint\qint\calculator.cpp(120): warning C4018: '<': signed/unsigned mismatch
-c:\codes\visual studio\bignumber\qint\qint\calculator.cpp(132): warning C4018: '<': signed/unsigned mismatch
-c:\codes\visual studio\bignumber\qint\qint\calculator.cpp(141): warning C4018: '<': signed/unsigned mismatch
-c:\codes\visual studio\bignumber\qint\qint\calculator.cpp(170): warning C4018: '<': signed/unsigned mismatch
-  Generating Code...
-c:\codes\visual studio\bignumber\qint\qint\calculator.cpp(201): warning C4715: 'Calculator::xuatAns': not all control paths return a value
-c:\codes\visual studio\bignumber\qint\qint\calculator.cpp(220): warning C4715: 'Calculator::xuatInt': not all control paths return a value
-  LINK : C:\Codes\Visual Studio\BigNumber\QInt\Debug\QInt.exe not found or not built by the last incremental link; performing full link
-  QInt.vcxproj -> C:\Codes\Visual Studio\BigNumber\QInt\Debug\QInt.exe
-  QInt.vcxproj -> C:\Codes\Visual Studio\BigNumber\QInt\Debug\QInt.pdb (Full PDB)
+﻿  QFloat.cpp
+c:\users\vinh ton that\desktop\bignumber\qint\qint\qfloat.cpp(245): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+c:\users\vinh ton that\desktop\bignumber\qint\qint\qfloat.cpp(277): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+LINK : fatal error LNK1201: error writing to program database 'C:\Users\Vinh Ton That\Desktop\BigNumber\QInt\Debug\QInt.pdb'; check for insufficient disk space, invalid path, or insufficient privilege

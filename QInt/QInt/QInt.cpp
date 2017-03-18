@@ -22,8 +22,9 @@ QInt::QInt()
 }
 
 QInt::QInt(int so, string input) {
-	string realValue;
 	setCoSo(so);
+	// Kiem tra tran so
+	string realValue;
 
 	switch (coSo)
 	{
@@ -394,7 +395,7 @@ string QInt::getValue() {
 	case BIN: return getBin(); break;
 	case DEC: return getDec(); break;
 	case HEX: return getHex(); break;
-	default:
+	default: return string();
 		break;
 	}
 }

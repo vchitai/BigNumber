@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <stdio.h>
+#include <stdlib.h>
 #include <algorithm>
 #include <math.h>
 #include <string.h>
@@ -11,17 +12,17 @@
 using namespace std;
 
 //Truong define may cai gioi han vo day
-#define LIMIT_DEC_EXPO_OVERFLOW -4965
 #define BIN 2
 #define DEC 10
 #define EXPO 15
 #define HEX 16
 #define SIGN 112
+#define BIAS 16383
 #define MAX_BITS 128
 #define LIMIT_DEC_EXPO_STANDARD 4931
-#define BIAS 16383
-#define LIMIT_BIN_EXPO_OVERFLOW -32767
+#define LIMIT_DEC_EXPO_OVERFLOW -4965
 #define LIMIT_BIN_EXPO_STANDARD 32768
+#define LIMIT_BIN_EXPO_OVERFLOW -32767
 
 //Bieu dien so thap phan: thapPhan * 10 ^ luyThua
 struct SoThapPhan {

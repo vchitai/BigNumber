@@ -1,11 +1,11 @@
-#include <iostream>
-#include "QInt.h"
 #include "Calculator.h"
 
 using namespace std;
 
 int main() {
-	Calculator_Start();
+	Calculator calculator;
+
+	calculator.start();
 
 	return 0;
 }

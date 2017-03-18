@@ -35,10 +35,7 @@ private:
 	vector<Command> QfloatMenu;
 	//Bao loi
 	vector<int> Error;
-public:
-	//Khoi tao mac dinh ans = 0
-	Calculator();
-
+protected:
 	//Chuyen che do
 	void changeMode();
 
@@ -46,23 +43,13 @@ public:
 	void initQIntMenu();
 	void initQFloatMenu();
 
-	//In Menu
+	//In menu
 	void printMenu(vector<Command> cm);
-	void callMenu();
-
-	//Xu ly lenh
-	int handleQIntCommand(string input);
-	int handleQFloatCommand(string input);
 
 	//Kiem tra du lieu nhap
 	bool isQIntConvertValid(string input);
 	bool isQFloatConvertValid(string input);
 
-	//Bao Loi
-	void xuatLoi();
-
-	//Xu ly xuat Ans
-	string xuatAns();
 	//Xu ly nhap so hang
 	QInt nhapSoHangInt();
 	QFloat nhapSoHangFloat();
@@ -91,8 +78,32 @@ public:
 	void NhanFloat(QFloat soHang);
 	void ChiaFloat(QFloat soHang);
 
-	//Lay Co So
-	int getCoSo();
-};
+	//In Menu
+	void callMenu();
 
-void Calculator_Start();
+	//Xu ly lenh
+	bool handleQIntCommand(string input);
+	bool handleQFloatCommand(string input);
+
+	//Bao Loi
+	void xuatLoi();
+
+	//Xu ly xuat Ans
+	string xuatAns();
+
+	//Tach chuoi lay phan mu va phan thap phan cua QFloat
+	void xuLyFloatInput(string input, string &thapPhan, string &mu);
+public:
+	//Khoi tao mac dinh ans = 0
+	Calculator();
+
+	//Khoi tao sao chep va sao chep
+	Calculator(const Calculator &calc);
+	Calculator& operator = (const Calculator& calc);
+
+	//Khoi dong may tinh
+	void start();
+
+	//Huy
+	~Calculator();
+};

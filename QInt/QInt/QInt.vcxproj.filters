@@ -38,9 +38,6 @@
     <ClCompile Include="Calculator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Calculator_Start.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="QFloat.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

@@ -6,6 +6,23 @@ Calculator::Calculator()
 	ans = new QInt();
 	initQIntMenu();
 	initQFloatMenu();
+	DoiSangHeDec();
+}
+
+void Calculator::xuLyFloatInput(string input, string &thapPhan, string &mu)
+{
+	int i = 0;
+	thapPhan.clear();
+	mu.clear();
+	while (i < input.length() && input[i] != 'E' &&input[i] != 'e') {
+		thapPhan.push_back(input[i]);
+		i++;
+	}
+	i++;
+	while (i < input.length()) {
+		mu.push_back(input[i]);
+		i++;
+	}
 }
 
 //Chuyen che do
@@ -17,6 +34,7 @@ void Calculator::changeMode() {
 		ans = new QFloat();
 	else
 		ans = new QInt();
+	DoiSangHeDec();
 }
 
 //Khoi tao menu
@@ -68,7 +86,7 @@ void Calculator::callMenu() {
 }
 
 //Xu ly lenh
-int Calculator::handleQIntCommand(string input) 
+bool Calculator::handleQIntCommand(string input)
 {
 	if (input.size() == 1)
 	{
@@ -97,22 +115,22 @@ int Calculator::handleQIntCommand(string input)
 		}
 		case '-': {
 			QInt soHang = nhapSoHangInt();
-			CongInt(soHang);
+			TruInt(soHang);
 			break;
 		}
 		case '*': {
 			QInt soHang = nhapSoHangInt();
-			CongInt(soHang);
+			NhanInt(soHang);
 			break;
 		}
 		case '/': {
 			QInt soHang = nhapSoHangInt();
-			CongInt(soHang);
+			ChiaInt(soHang);
 			break;
 		}
 		case 'Q':
 		case 'q':
-			return -1;
+			return true;
 		default:
 			if (isQIntConvertValid(input)) {
 				delete ans;
@@ -120,7 +138,7 @@ int Calculator::handleQIntCommand(string input)
 			}
 			break;
 		}
-		return 0;
+		return false;
 	}
 	else
 	{
@@ -128,11 +146,11 @@ int Calculator::handleQIntCommand(string input)
 			delete ans;
 			ans = new QInt(nhapInt(input));
 		}
-		return 0;
+		return false;
 	}
 }
 
-int Calculator::handleQFloatCommand(string input)
+bool Calculator::handleQFloatCommand(string input)
 {
 	if (input.size() == 1)
 	{
@@ -149,36 +167,36 @@ int Calculator::handleQFloatCommand(string input)
 		}
 		case '-': {
 			QFloat soHang = nhapSoHangFloat();
-			CongFloat(soHang);
+			TruFloat(soHang);
 			break;
 		}
 		case '*': {
 			QFloat soHang = nhapSoHangFloat();
-			CongFloat(soHang);
+			NhanFloat(soHang);
 			break;
 		}
 		case '/': {
 			QFloat soHang = nhapSoHangFloat();
-			CongFloat(soHang);
+			ChiaFloat(soHang);
 			break;
 		}
 		case 'Q':
 		case 'q':
-			return -1;
+			return true;
 		default:
 			if (isQFloatConvertValid(input))
 				delete ans;
-				ans = new QFloat(nhapFloat(input));
+			ans = new QFloat(nhapFloat(input));
 			break;
 		}
-		return 0;
+		return false;
 	}
 	else
 	{
 		if (isQFloatConvertValid(input))
 			delete ans;
-			ans = new QFloat(nhapFloat(input));
-		return 0;
+		ans = new QFloat(nhapFloat(input));
+		return false;
 	}
 }
 
@@ -226,34 +244,81 @@ bool Calculator::isQFloatConvertValid(string input) {
 	switch (coSo)
 	{
 	case BIN:
+	{
+		if (input.length() < MAX_BITS)
+		{
+			Error.push_back(ERROR_INVALID_INPUT);
+			return false;
+		}
 		for (int i = 0; i < (int)input.size(); i++)
+		{
 			if (input[i] != '0' && input[i] != '1')
 			{
 				Error.push_back(ERROR_INVALID_INPUT);
 				return false;
 			}
+		}
 		break;
+	}
 	case DEC:
 	{
+		int dot = 0;
+		int E = 0;
 		int i = 0;
-		if (input[i] == '-')
-			i++;
-		for (; i < (int)input.size(); i++)
+		int size = input.length();
+		if (input[i] == '-') i++;
+		for (; i < size; i++)
+		{
+
+			if (input[i] == '.')
+			{
+				dot++;
+				if (i == 0 || i == size - 1)
+				{
+					Error.push_back(ERROR_INVALID_INPUT);
+					return false;
+				}
+				if (input[i - 1]<'0' || input[i - 1]>'9' || input[i + 1]<'0' || input[i + 1]>'9')
+				{
+					Error.push_back(ERROR_INVALID_INPUT);
+					return false;
+				}
+				if (dot > 1)
+					break;
+				else
+					continue;
+			}
+			if (input[i] == 'E' || input[i] == 'e')
+			{
+				E++;
+				if (i == 0 || i == size - 1)
+				{
+					Error.push_back(ERROR_INVALID_INPUT);
+					return false;
+				}
+				if (input[i - 1]<'0' || input[i - 1]>'9' || input[i + 1]<'0' || input[i + 1]>'9')
+				{
+					Error.push_back(ERROR_INVALID_INPUT);
+					return false;
+				}
+				if (E > 1)
+					break;
+				else
+					continue;
+			}
 			if (input[i] < '0' || input[i] > '9')
 			{
 				Error.push_back(ERROR_INVALID_INPUT);
 				return false;
 			}
+		}
+		if (E > 1 || dot > 1)
+		{
+			Error.push_back(ERROR_INVALID_INPUT);
+			return false;
+		}
 		break;
 	}
-	case HEX:
-		for (int i = 0; i < (int)input.size(); i++)
-			if ((input[i] < '0' || input[i] > '9') && (input[i] < 'A' || input[i] > 'F') && (input[i] < 'a' || input[i] > 'f'))
-			{
-				Error.push_back(ERROR_INVALID_INPUT);
-				return false;
-			}
-		break;
 	default:
 		Error.push_back(ERROR_INVALID_INPUT);
 		return false;
@@ -269,7 +334,8 @@ QInt Calculator::nhapSoHangInt() {
 
 	if (isQIntConvertValid(input2)) {
 		return QInt(coSo, input2);
-	} else {
+	}
+	else {
 		return QInt();
 	}
 }
@@ -278,9 +344,12 @@ QFloat Calculator::nhapSoHangFloat() {
 	string input2;
 	cout << "Input term: ";
 	cin >> input2;
+	string thapPhan;
+	string mu;
+	xuLyFloatInput(input2, thapPhan, mu);
 
 	if (isQFloatConvertValid(input2)) {
-		return QFloat();
+		return QFloat(thapPhan, mu);
 	}
 	else {
 		return QFloat();
@@ -289,7 +358,7 @@ QFloat Calculator::nhapSoHangFloat() {
 
 void Calculator::xuatLoi() {
 	if (!Error.empty()) {
-		for (int i = 0; i<(int)Error.size(); i++)
+		for (int i = 0; i < (int)Error.size(); i++)
 			switch (Error[i])
 			{
 			case ERROR_INVALID_INPUT:
@@ -319,7 +388,10 @@ QInt Calculator::nhapInt(string input)
 }
 
 QFloat Calculator::nhapFloat(string input) {
-	return QFloat();
+	string thapPhan;
+	string mu;
+	xuLyFloatInput(input, thapPhan, mu);
+	return QFloat(thapPhan, mu);
 }
 
 //Cac Ham DoiSangHeSo() doi coSo trong QInt
@@ -329,20 +401,17 @@ void Calculator::DoiSangHeBin()
 	ans->setCoSo(coSo);
 }
 
-
 void Calculator::DoiSangHeDec()
 {
 	coSo = DEC;
 	ans->setCoSo(coSo);
 }
 
-
 void Calculator::DoiSangHeHex()
 {
 	coSo = HEX;
 	ans->setCoSo(coSo);
 }
-
 
 //Cac Ham tinh toan yeu cau:
 //	nhap vao mot doi so
@@ -364,7 +433,6 @@ void Calculator::CongInt(QInt soHang)
 	}
 }
 
-
 void Calculator::TruInt(QInt soHang)
 {
 	QInt tmp = *(dynamic_cast<QInt*>(ans));
@@ -380,7 +448,6 @@ void Calculator::TruInt(QInt soHang)
 		ans = new QInt(tmp);
 	}
 }
-
 
 void Calculator::NhanInt(QInt soHang)
 {
@@ -398,37 +465,147 @@ void Calculator::NhanInt(QInt soHang)
 	}
 }
 
-
 void Calculator::ChiaInt(QInt soHang)
 {
 	QInt tmp = *(dynamic_cast<QInt*>(ans));
 	if (Error.empty())
 		tmp = tmp / soHang;
-	if (tmp.getCoSo() == -1) {
+	if (tmp.getCoSo() == -2) {
+		Error.push_back(ERROR_DIVIDE_BY_0);
+		delete ans;
+		ans = new QInt();
+	} else if (tmp.getCoSo() == -1) {
 		Error.push_back(ERROR_BUFFER_OVERFLOW);
 		delete ans;
 		ans = new QInt();
-	}
-	else {
+	} else {
 		delete ans;
 		ans = new QInt(tmp);
 	}
 }
 
 void Calculator::CongFloat(QFloat soHang) {
-
+	QFloat tmp = *(dynamic_cast<QFloat*>(ans));
+	if (Error.empty())
+		tmp = tmp + soHang;
+	if (tmp.getCoSo() == -1) {
+		Error.push_back(ERROR_BUFFER_OVERFLOW);
+		delete ans;
+		ans = new QFloat();
+	}
+	else {
+		delete ans;
+		ans = new QFloat(tmp);
+	}
 }
+
 void Calculator::TruFloat(QFloat soHang) {
-
+	QFloat tmp = *(dynamic_cast<QFloat*>(ans));
+	if (Error.empty())
+		tmp = tmp - soHang;
+	if (tmp.getCoSo() == -1) {
+		Error.push_back(ERROR_BUFFER_OVERFLOW);
+		delete ans;
+		ans = new QFloat();
+	}
+	else {
+		delete ans;
+		ans = new QFloat(tmp);
+	}
 }
+
 void Calculator::NhanFloat(QFloat soHang) {
-
+	QFloat tmp = *(dynamic_cast<QFloat*>(ans));
+	if (Error.empty())
+		tmp = tmp * soHang;
+	if (tmp.getCoSo() == -1) {
+		Error.push_back(ERROR_BUFFER_OVERFLOW);
+		delete ans;
+		ans = new QFloat();
+	}
+	else {
+		delete ans;
+		ans = new QFloat(tmp);
+	}
 }
+
 void Calculator::ChiaFloat(QFloat soHang) {
-
+	QFloat tmp = *(dynamic_cast<QFloat*>(ans));
+	if (Error.empty())
+		tmp = tmp / soHang;
+	if (tmp.getCoSo() == -3) {
+		Error.push_back(ERROR_DIVIDE_BY_0);
+		delete ans;
+		ans = new QInt();
+	} else if (tmp.getCoSo() == -1) {
+		Error.push_back(ERROR_BUFFER_OVERFLOW);
+		delete ans;
+		ans = new QFloat();
+	} else {
+		delete ans;
+		ans = new QFloat(tmp);
+	}
 }
 
-int Calculator::getCoSo()
+//Khoi dong may tinh
+void Calculator::start()
 {
-	return coSo;
+	string command;
+	bool exit = false;
+	do
+	{
+		system("cls");
+		system("Color FC");
+		xuatLoi();
+		callMenu();
+		cout << "Input Command: ";
+		cin >> command;
+		exit = handleQIntCommand(command);
+	} while (!exit);
+}
+
+Calculator::Calculator(const Calculator &calc)
+{
+	coSo = calc.coSo;
+	mode = calc.mode;
+	QintMenu = calc.QintMenu;
+	QfloatMenu = calc.QfloatMenu;
+	Error = calc.Error;
+	if (mode == MODE_QINT) {
+		if (ans != NULL)
+			delete ans;
+		ans = new QInt(*((QInt*)(calc.ans)));
+	}
+	else {
+		if (ans != NULL)
+			delete ans;
+		ans = new QFloat(*((QFloat*)(calc.ans)));
+	}
+}
+
+Calculator& Calculator::operator = (const Calculator& calc)
+{
+	coSo = calc.coSo;
+	mode = calc.mode;
+	QintMenu = calc.QintMenu;
+	QfloatMenu = calc.QfloatMenu;
+	Error = calc.Error;
+	if (mode == MODE_QINT) {
+		if (ans != NULL)
+			delete ans;
+		ans = new QInt(*((QInt*)(calc.ans)));
+	}
+	else {
+		if (ans != NULL)
+			delete ans;
+		ans = new QFloat(*((QFloat*)(calc.ans)));
+	}
+
+	return (*this);
+}
+
+Calculator::~Calculator()
+{
+	if (ans != NULL)
+		delete ans;
 }

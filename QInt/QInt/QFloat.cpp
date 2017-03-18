@@ -28,18 +28,46 @@ string QFloat::toString(int dec) const {
 //soMu nho nen chuyen soMu ve dang so nguyen roi cong tru tren soMu luon
 void QFloat::chuanHoaDec(string & soThapPhan, string & soMu)
 {
-	int cham = -1;
+	int viTriChamHienTai = -1;
+	int viTriChamDich = 1;
 	for (int i = 0; i < (int)soThapPhan.size(); i++)
 		if (soThapPhan[i] == '.')
-			cham = i;
-	if (cham == -1)
+			viTriChamHienTai = i;
+	if (viTriChamHienTai == -1)
 		soThapPhan.append(".0");
-	else if (cham != 1) {
-		int lastOne = 1;
-		if (soThapPhan[0] == '-') lastOne++;
-		for (int i = cham; i > lastOne; i--)
+	else if (viTriChamHienTai != 1) 
+	{
+		if (soThapPhan[0] == '-') viTriChamDich++;
+		for (int i = viTriChamHienTai; i > viTriChamDich; i--)
 			swap(soThapPhan[i], soThapPhan[i - 1]);
-		soMu = congDec(soMu, toString(cham - 1));
+		soMu = congDec(soMu, toString(viTriChamHienTai - 1));
+	}
+
+	if (soThapPhan[viTriChamDich - 1] == '0')
+	{
+		int i = viTriChamDich + 1;
+		while (i < soThapPhan.length() && soThapPhan[i] == '0') i++;
+		string newThapPhan;
+		int luyThua = i-viTriChamDich;
+		if (soThapPhan[0] == '-')
+			newThapPhan.push_back('-');
+		if (i < soThapPhan.length()) {
+			newThapPhan.push_back(soThapPhan[i]);
+			i++;
+			newThapPhan.push_back('.');
+			if (i < soThapPhan.length()) {
+				while (i < soThapPhan.length())
+					newThapPhan.push_back(soThapPhan[i]);
+			}
+			else
+				newThapPhan.push_back('0');
+		}
+		else {
+			newThapPhan.clear();
+			newThapPhan.append("0.0");
+		}
+		soThapPhan = newThapPhan;
+		soMu = congDec(soMu, toString(luyThua));
 	}
 }
 
@@ -114,22 +142,31 @@ SoThapPhan QFloat::valueOf(string thapPhan, string mu) {
 //Luu y: 15 bit luu so mu bieu dien o dang so Bias
 QFloat::QFloat(string soThapPhan, string soMu)
 {
+	setCoSo(DEC);
 	chuanHoaDec(soThapPhan, soMu);
 	if (cmp(soMu, toString(LIMIT_DEC_EXPO_OVERFLOW)) == -1 || cmp(soMu, toString(LIMIT_DEC_EXPO_STANDARD)) == 1)
 		coSo = -1;
 	else if (cmp(soMu, toString(LIMIT_DEC_EXPO_OVERFLOW)) == 1 && cmp(soMu, toString(-LIMIT_DEC_EXPO_STANDARD)) == -1)
 		coSo = -coSo;
-
+	
 	string realValue;
-	switch (coSo)
-	{
-	case 10:
-		realValue = DecToBin(valueOf(soThapPhan, soMu));
-	default:
-		break;
+	realValue = DecToBin(valueOf(soThapPhan, soMu));
+	// Nhi phan
+	if (realValue.size() != 0) { 
+		if (realValue[0] != '#')
+		{
+			for (int i = 0; i < (int)realValue.size(); i++)
+				if (realValue[127 - i] == '1')
+					ganBit(i, 1);
+				else
+					ganBit(i, 0);
+		}
+		else
+		{
+			coSo = -1;
+		}
 	}
 }
-
 
 //Truong
 //Chi lay 30 bit dau trong 112 bit bieu dien de tinh ra phan thap phan (goi gia tri la v)
@@ -423,7 +460,6 @@ string QFloat::getValue()
 	{
 	case BIN: return getBin(); break;
 	case DEC: return getDec(); break;
-	default: 
-		break;
+	default: return string(); break;
 	}
 }

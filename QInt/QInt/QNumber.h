@@ -20,6 +20,8 @@ using namespace std;
 #define MAX_BITS 128
 #define LIMIT_DEC_EXPO_STANDARD 4931
 #define BIAS 16383
+#define LIMIT_BIN_EXPO_OVERFLOW -32767
+#define LIMIT_BIN_EXPO_STANDARD 32768
 
 //Bieu dien so thap phan: thapPhan * 10 ^ luyThua
 struct SoThapPhan {

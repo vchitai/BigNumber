@@ -20,7 +20,7 @@ private:
 	//soMu nho nen chuyen soMu ve dang so nguyen roi cong tru tren soMu luon
 	void chuanHoaDec(string &soThapPhan, string &soMu);
 
-	void chuanHoaThapPhanBin(string &bin);
+	void chuanHoaThapPhanBin(string &bin) const;
 
 	QFloat BinToQFloat(string b) const;
 public:
@@ -53,7 +53,7 @@ public:
 	//Dang Chuan
 	string DecToBin(SoThapPhan dec) const;
 	//Dang Khong Chuan
-	string DecToBinU(SoThapPhan dec);
+	string DecToBinU(SoThapPhan dec) const;
 
 	//Lay bit tai vi tri pos
 	char getBit(int pos) const;

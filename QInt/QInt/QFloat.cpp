@@ -43,7 +43,7 @@ void QFloat::chuanHoaDec(string & soThapPhan, string & soMu)
 	}
 }
 
-void QFloat::chuanHoaThapPhanBin(string& bin) {
+void QFloat::chuanHoaThapPhanBin(string& bin) const {
 	while (bin.size() < SIGN) {
 		bin.append("0");
 	}
@@ -168,7 +168,7 @@ string QFloat::DecToBin(SoThapPhan dec) const
 
 	//SoThapPhan dec => v * 2 ^ x
 	double y = dec.luyThua * log2(10) - (int)(dec.luyThua * log2(10));
-	int x = (int)dec.luyThua * log2(10);
+	int x = (int)(dec.luyThua * log2(10));
 	double v = dec.thapPhan * pow(2, y);
 
 	QInt temp;
@@ -225,7 +225,7 @@ string QFloat::DecToBinU(SoThapPhan dec) const
 
 	//SoThapPhan dec => v * 2 ^ x
 	double y = dec.luyThua * log2(10) - (int)(dec.luyThua * log2(10));
-	int x = (int)dec.luyThua * log2(10);
+	int x = (int)(dec.luyThua * log2(10));
 	double v = dec.thapPhan * pow(2, y);
 
 	QInt temp;

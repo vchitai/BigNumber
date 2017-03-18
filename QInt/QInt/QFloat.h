@@ -1,54 +1,14 @@
 #pragma once
 #include "QInt.h"
-using namespace std;
-
-#define BIAS 16383
-#define SIGN 112
-#define EXPO 15
-#define LIMIT_DEC_EXPO_OVERFLOW -4965
-#define LIMIT_DEC_EXPO_STANDARD 4931
-
-/*
-Truong define may cai gioi han vo day
-*/
-
-//Bieu dien so thap phan: thapPhan * 10 ^ luyThua
-struct SoThapPhan {
-	double thapPhan;
-	int luyThua;
-};
 
 //QFloat: bieu dien so thuc lon 128 bit
-class QFloat
+class QFloat : public QNumber
 {
-private:
-	//Mang luu 128 bit trong so lon
-	//bit 0: luu dau
-	//15 bit tiep theo: luu so mu, theo dang bias
-	//112 bit cuoi: luu gia tri cua significant
-	//...
-	char data[16];
-	//Co So de bao loi
-	int coSo;
-
 private:
 	//chuyen sang String
 	string toString(int dec) const;
 	//doi so de khoi tao
 	SoThapPhan valueOf(string thapPhan, string mu);
-	//gan bit tai vi tri pos = value
-	void ganBit(int pos, int value);
-
-	//ham so sanh tren he 10, ho tro hai ham cong va tru tren co so 10
-	static int cmp(string a, string b);
-
-	//a + b (tinh o he co so 10)
-	//Luu y: ca a va b deu phai cung la so nguyen duong
-	static string congDec(string a, string b);
-
-	// a - b (tinh o he co so 10)
-	//Luu y: ca a va b deu phai cung la so nguyen duong
-	static string truDec(string a, string b);
 
 	//Tai
 	//ham chuan hoa gia tri nhap vao ve dang a.bcd * 10 ^ x.
@@ -110,6 +70,8 @@ public:
 	//Luu y: tan dung ham BinToDec(), goi ham getBin() sau do su dung ham BinToDec
 	//Luu y: 15 bit luu so mu bieu dien o dang so Bias
 	string getDec() const;
+
+	string getValue();
 
 	//Cac ham phep tinh tren QInt (thuc hien tren co so 2)
 	QFloat operator + (const QFloat& number) const;

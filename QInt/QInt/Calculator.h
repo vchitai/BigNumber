@@ -1,9 +1,11 @@
 #pragma once
-#include "QInt.h"
+#include "QFloat.h"
 
-#define MAIN_MENU 1
-#define QINT_MENU 3
-#define QFLOAT_MENU 5
+#define DEFAULT_MODE 0
+#define DEFAULT_NUMERAL 10
+
+#define MODE_QINT 0
+#define MODE_QFLOAT 1
 
 #define ERROR_INVALID_INPUT 101
 #define ERROR_DIVIDE_BY_0 102
@@ -23,13 +25,12 @@ class Calculator
 {
 private:
 	//Calculator luu 1 ket qua thuc hien truoc, default = 0
-	QInt ans;
-	//Mode : 1 - QInt, 2 - QFloat, default = 1
-	int mode = 1;
-	//CoSo : 2 - BIN, 10 - DEC, 16 - HEX
-	int coSo = DEC;
+	QNumber *ans;
+	//Mode : 0 - QInt, 1 - QFloat, Default = 0
+	int mode = DEFAULT_MODE;
+	//CoSo : 2 - BIN, 10 - DEC, 16 - HEX, DEFAULT = 10
+	int coSo = DEFAULT_NUMERAL;
 	//Menu
-	vector<Command> mainMenu;
 	vector<Command> QintMenu;
 	vector<Command> QfloatMenu;
 	//Bao loi
@@ -38,38 +39,39 @@ public:
 	//Khoi tao mac dinh ans = 0
 	Calculator();
 
+	//Chuyen che do
+	void changeMode();
+
 	//Khoi tao menu
-	void initMainMenu();
 	void initQIntMenu();
 	void initQFloatMenu();
 
 	//In Menu
-	void printMenu(vector<Command>);
-	void callMenu(int);
+	void printMenu(vector<Command> cm);
+	void callMenu();
 
 	//Xu ly lenh
 	int handleQIntCommand(string input);
+	int handleQFloatCommand(string input);
 
 	//Kiem tra du lieu nhap
-	bool isNhapOk(string input);
+	bool isQIntConvertValid(string input);
+	bool isQFloatConvertValid(string input);
 
 	//Bao Loi
 	void xuatLoi();
 
 	//Xu ly xuat Ans
 	string xuatAns();
-	//Xu ly nhap so hang 2
-	QInt nhapSoHang2();
+	//Xu ly nhap so hang
+	QInt nhapSoHangInt();
+	QFloat nhapSoHangFloat();
 
 	//Nhap QInt
 	QInt nhapInt(string input);
-	//Xuat QInt
-	string xuatInt();
 
 	//Nhap QFloat
-	void nhapFloat();
-	//Xuat QFloat
-	string xuatFloat();
+	QFloat nhapFloat(string input);
 
 	//Cac Ham DoiSangHeSo() doi coSo cua ans
 	void DoiSangHeBin();
@@ -80,10 +82,14 @@ public:
 	//	nhap vao mot doi so
 	//	tinh kq
 	//	ans <- kq
-	void Cong(QInt soHang);
-	void Tru(QInt soHang);
-	void Nhan(QInt soHang);
-	void Chia(QInt soHang);
+	void CongInt(QInt soHang);
+	void TruInt(QInt soHang);
+	void NhanInt(QInt soHang);
+	void ChiaInt(QInt soHang);
+	void CongFloat(QFloat soHang);
+	void TruFloat(QFloat soHang);
+	void NhanFloat(QFloat soHang);
+	void ChiaFloat(QFloat soHang);
 
 	//Lay Co So
 	int getCoSo();

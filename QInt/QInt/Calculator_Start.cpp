@@ -4,24 +4,20 @@
 
 void Calculator_Start()
 {
-	Calculator cal;
-	cal.DoiSangHeDec();
+	Calculator calculator;
 	string command = "";
 	int exit = 0;
+	calculator.DoiSangHeDec();
 
 	do
 	{
 		system("cls");
 		system("Color FC");
-		cal.xuatLoi();
-		cout << "CALCULATOR\n";
-		cout << "\t" << cal.xuatAns() << endl;
-		int coSo = cal.getCoSo();
-		cout << "Current Numeral System: " << (coSo == BIN? "BIN" : (coSo == DEC? "DEC" : "HEX")) << endl;
-		cal.callMenu(QINT_MENU);
+		calculator.xuatLoi();
+		calculator.callMenu();
 		cout << "Input Command: ";
 		cin >> command;
-		exit = cal.handleQIntCommand(command);
+		exit = calculator.handleQIntCommand(command);
 	} while (exit == 0);
 
 }

@@ -1,77 +1,11 @@
 #include "QFloat.h"
 
-//gan bit tai vi tri pos = value
-void QFloat::ganBit(int pos, int value)
-{
-	int i = pos / 8;
-	int j = pos % 8;
-
-	data[i] &= ~(1 << j);
-	data[i] |= (value << j);
-}
-
 QFloat QFloat::BinToQFloat(string b) const
 {
 	QFloat kq;
 	for (int i = 0; i < (int)b.size(); ++i)
 		kq.ganBit(0, b[i] - '0');
 	return kq;
-}
-
-//ham so sanh tren he 10, ho tro hai ham cong va tru tren co so 10
-int QFloat::cmp(string a, string b)
-{
-	while (a.size() < b.size()) a = '0' + a;
-	while (b.size() < a.size()) b = '0' + b;
-	return (a == b ? 0 : (a > b ? 1 : -1));
-}
-
-//a + b (tinh o he co so 10)
-//Luu y: ca a va b deu phai cung la so nguyen duong
-string QFloat::congDec(string a, string b)
-{
-	int sum = 0, carry = 0;
-	string c = "";
-	while (a.size() < b.size()) a = '0' + a;
-	while (b.size() < a.size()) b = '0' + b;
-	for (int i = a.size() - 1; i >= 0; --i) {
-		sum = (a[i] - '0') + (b[i] - '0') + carry;
-		carry = sum / 10;
-		c = char('0' + sum % 10) + c;
-	}
-	if (carry > 0) c = '1' + c;
-	return c;
-}
-
-// a - b (tinh o he co so 10)
-//Luu y: ca a va b deu phai cung la so nguyen duong
-string QFloat::truDec(string a, string b)
-{
-	int dau = 1;
-	if (cmp(a, b) == -1) {
-		dau = -1;
-		swap(a, b);
-	}
-	int borrow = 0;
-	string c = "";
-	while (a.size() < b.size()) a = '0' + a;
-	while (b.size() < a.size()) b = '0' + b;
-	for (int i = a.size() - 1; i >= 0; --i) {
-		int sum = a[i] - b[i] - borrow;
-		if (sum < 0) {
-			sum = sum + 10;
-			borrow = 1;
-		}
-		else
-			borrow = 0;
-		c = char(sum + '0') + c;
-	}
-
-	while (c.size() > 0 && c[0] == '0') {
-		c.erase(0, 1);
-	}
-	if (dau == -1) c = '-' + c;
-	return c;
 }
 
 string QFloat::toString(int dec) const {
@@ -185,12 +119,12 @@ QFloat::QFloat(string soThapPhan, string soMu)
 		coSo = -1;
 	else if (cmp(soMu, toString(LIMIT_DEC_EXPO_OVERFLOW)) == 1 && cmp(soMu, toString(-LIMIT_DEC_EXPO_STANDARD)) == -1)
 		coSo = -coSo;
-	
+
 	string realValue;
 	switch (coSo)
 	{
 	case 10:
-		realValue = DecToBin(valueOf(soThapPhan,soMu));
+		realValue = DecToBin(valueOf(soThapPhan, soMu));
 	default:
 		break;
 	}
@@ -232,56 +166,93 @@ string QFloat::DecToBin(SoThapPhan dec) const
 		dec.thapPhan = -dec.thapPhan;
 	}
 
+	//SoThapPhan dec => v * 2 ^ x
+	double y = dec.luyThua * log2(10) - (int)(dec.luyThua * log2(10));
+	int x = (int)dec.luyThua * log2(10);
+	double v = dec.thapPhan * pow(2, y);
+
 	QInt temp;
-	string phanThapPhan = temp.DecToBin(toString((int)floor(dec.thapPhan)));
-	int dich = phanThapPhan.size()-1;
-	double sauDauPhay = dec.thapPhan - floor(dec.thapPhan);
-	int i = 0;
-	while (i < SIGN && sauDauPhay != 1.0) {
-		sauDauPhay = sauDauPhay * 2;
-		phanThapPhan.push_back('0' + (int)floor(sauDauPhay));
+	string dayBit = temp.DecToBin(toString((int)v));
+	while (dayBit[0] == '0') dayBit.erase(0, 1);
+	dayBit.erase(0, 1);
+	x += size(dayBit);
+
+	if (abs(v) < 1e-10 || x < LIMIT_BIN_EXPO_OVERFLOW - 112) {
+		string s = "";
+		for (int i = 0; i < 128; ++i)
+			s = s + '0';
+		return s;
 	}
 
-	int mu = dec.luyThua*log2(10)+dich;
-	string phanMu = temp.DecToBin(toString(mu + BIAS));
-	double soDu = dec.luyThua*log2(10) - mu;
+	if (x < LIMIT_BIN_EXPO_OVERFLOW) {
+		return DecToBinU(dec);
+	}
 
-	string bin;
-	bin.push_back(dau);
-	bin.append(phanMu); 
-	bin.append(phanThapPhan);
+	if (x > LIMIT_BIN_EXPO_STANDARD) {
+		string s = "";
+		for (int i = 0; i < 128; ++i)
+			s = s + '#';
+		return s;
+	}
+
+	v = v - (int)v;
+	while (dayBit.size() < 112 && abs(v - 1) > 1e-9) {
+		v *= 2;
+		dayBit += ('0' + (v > 1 - 1e-9));
+		v = v - (int)(v + 1e-9);
+	}
+	chuanHoaThapPhanBin(dayBit);
+
+	string phanMu = temp.DecToBin(toString(x + BIAS));
+	while (phanMu.size() > 15) phanMu.erase(0, 1);
+
+	string bin = "";
+	bin += dau;
+	bin += phanMu;
+	bin += dayBit;
 
 	return bin;
 }
 
 //Dang khong chuan
-string QFloat::DecToBinU(SoThapPhan dec)
+string QFloat::DecToBinU(SoThapPhan dec) const
 {
 	char dau = '0';
 	if (dec.thapPhan < 0) {
 		dau = '1';
 		dec.thapPhan = -dec.thapPhan;
 	}
-	dec.thapPhan /= 10.0;
-	dec.luyThua += 1;
+
+	//SoThapPhan dec => v * 2 ^ x
+	double y = dec.luyThua * log2(10) - (int)(dec.luyThua * log2(10));
+	int x = (int)dec.luyThua * log2(10);
+	double v = dec.thapPhan * pow(2, y);
 
 	QInt temp;
-	double sauDauPhay = dec.thapPhan;
-	string phanThapPhan;
-	int i = 0;
-	while (i < SIGN && sauDauPhay != 1.0) {
-		sauDauPhay = sauDauPhay * 2;
-		phanThapPhan.push_back('0' + (int)floor(sauDauPhay));
+	string dayBit = temp.DecToBin(toString((int)v));
+	while (dayBit[0] == '0') dayBit.erase(0, 1);
+	x += size(dayBit);
+
+	while (x < LIMIT_BIN_EXPO_OVERFLOW) {
+		++x;
+		dayBit = '0' + dayBit;
 	}
 
-	int mu = dec.luyThua*log2(10);
-	string phanMu = temp.DecToBin(toString(2*BIAS+1));
-	double soDu = dec.luyThua*log2(10) - mu;
+	v = v - (int)v;
+	while (dayBit.size() < 112 && abs(v - 1) > 1e-9) {
+		v *= 2;
+		dayBit += ('0' + (v > 1 - 1e-9));
+		v = v - (int)(v + 1e-9);
+	}
+	chuanHoaThapPhanBin(dayBit);
 
-	string bin;
-	bin.push_back(dau);
-	bin.append(phanMu);
-	bin.append(phanThapPhan);
+	string phanMu = temp.DecToBin(toString(x + BIAS));
+	while (phanMu.size() > 15) phanMu.erase(0, 1);
+
+	string bin = "";
+	bin += dau;
+	bin += phanMu;
+	bin += dayBit;
 
 	return bin;
 }
@@ -444,4 +415,15 @@ QFloat QFloat::operator/(const QFloat & number) const
 		ketQua = BinToQFloat(temp);
 
 	return ketQua;
+}
+
+string QFloat::getValue()
+{
+	switch (coSo)
+	{
+	case BIN: return getBin(); break;
+	case DEC: return getDec(); break;
+	default: 
+		break;
+	}
 }

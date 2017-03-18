@@ -1,4 +1,3 @@
-﻿  QFloat.cpp
-c:\users\vinh ton that\desktop\bignumber\qint\qint\qfloat.cpp(245): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-c:\users\vinh ton that\desktop\bignumber\qint\qint\qfloat.cpp(277): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-LINK : fatal error LNK1201: error writing to program database 'C:\Users\Vinh Ton That\Desktop\BigNumber\QInt\Debug\QInt.pdb'; check for insufficient disk space, invalid path, or insufficient privilege
+﻿  Calculator.cpp
+  QInt.vcxproj -> C:\Codes\Visual Studio\BigNumber\QInt\Debug\QInt.exe
+  QInt.vcxproj -> C:\Codes\Visual Studio\BigNumber\QInt\Debug\QInt.pdb (Full PDB)

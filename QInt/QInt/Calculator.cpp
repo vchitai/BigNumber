@@ -3,21 +3,27 @@
 //Khoi tao mac dinh ans = 0
 Calculator::Calculator()
 {
-	ans = QInt();
+	ans = new QInt();
 	initQIntMenu();
+	initQFloatMenu();
+}
+
+//Chuyen che do
+void Calculator::changeMode() {
+	mode = 1 - mode;
+	if (ans != NULL)
+		delete ans;
+	if (mode)
+		ans = new QFloat();
+	else
+		ans = new QInt();
 }
 
 //Khoi tao menu
-void Calculator::initMainMenu() {
-	if (mainMenu.size() > 0)
-		return;
-	mainMenu.push_back(Command('1', "QInt"));
-	mainMenu.push_back(Command('2', "QFloat"));
-}
-
 void Calculator::initQIntMenu() {
 	if (QintMenu.size() > 0)
 		return;
+	QintMenu.push_back(Command('S', "Chuyen sang QFloat"));
 	QintMenu.push_back(Command('N', "Chuyen sang he BIN"));
 	QintMenu.push_back(Command('H', "Chuyen sang he HEX"));
 	QintMenu.push_back(Command('T', "Chuyen sang he DEC"));
@@ -31,6 +37,12 @@ void Calculator::initQIntMenu() {
 void Calculator::initQFloatMenu() {
 	if (QfloatMenu.size() > 0)
 		return;
+	QfloatMenu.push_back(Command('S', "Chuyen sang QInt"));
+	QfloatMenu.push_back(Command('+', "Cong"));
+	QfloatMenu.push_back(Command('-', "Tru"));
+	QfloatMenu.push_back(Command('*', "Nhan"));
+	QfloatMenu.push_back(Command('/', "Chia"));
+	QfloatMenu.push_back(Command('Q', "Thoat"));
 }
 
 //In Menu
@@ -39,16 +51,15 @@ void Calculator::printMenu(vector<Command> cm) {
 		cout << "\t" << cm[i].commandId << ". " << cm[i].description << endl;
 }
 
-void Calculator::callMenu(int n) {
-	switch (n)
+void Calculator::callMenu() {
+	cout << "\t" << xuatAns() << endl;
+	switch (mode)
 	{
-	case MAIN_MENU:
-		printMenu(mainMenu);
-		break;
-	case QINT_MENU: 
+	case MODE_QINT:
+		cout << "Current Numeral System: " << (coSo == BIN ? "BIN" : (coSo == DEC ? "DEC" : "HEX")) << endl;
 		printMenu(QintMenu);
 		break;
-	case QFLOAT_MENU:
+	case MODE_QFLOAT:
 		printMenu(QfloatMenu);
 		break;
 	default:
@@ -63,6 +74,10 @@ int Calculator::handleQIntCommand(string input)
 	{
 		switch (input[0])
 		{
+		case 'S':
+		case 's':
+			changeMode();
+			break;
 		case 'T':
 		case 't':
 			DoiSangHeDec();
@@ -76,44 +91,98 @@ int Calculator::handleQIntCommand(string input)
 			DoiSangHeHex();
 			break;
 		case '+': {
-			QInt soHang = nhapSoHang2();
-			Cong(soHang);
+			QInt soHang = nhapSoHangInt();
+			CongInt(soHang);
 			break;
 		}
 		case '-': {
-			QInt soHang = nhapSoHang2();
-			Tru(soHang);
+			QInt soHang = nhapSoHangInt();
+			CongInt(soHang);
 			break;
 		}
 		case '*': {
-			QInt soHang = nhapSoHang2();
-			Nhan(soHang);
+			QInt soHang = nhapSoHangInt();
+			CongInt(soHang);
 			break;
 		}
 		case '/': {
-			QInt soHang = nhapSoHang2();
-			Chia(soHang);
+			QInt soHang = nhapSoHangInt();
+			CongInt(soHang);
 			break;
 		}
 		case 'Q':
 		case 'q':
 			return -1;
 		default:
-			if (isNhapOk(input))
-				ans = nhapInt(input);
+			if (isQIntConvertValid(input)) {
+				delete ans;
+				ans = new QInt(nhapInt(input));
+			}
 			break;
 		}
 		return 0;
 	}
 	else
 	{
-		if (isNhapOk(input))
-			ans = nhapInt(input);
+		if (isQIntConvertValid(input)) {
+			delete ans;
+			ans = new QInt(nhapInt(input));
+		}
 		return 0;
 	}
 }
 
-bool Calculator::isNhapOk(string input) {
+int Calculator::handleQFloatCommand(string input)
+{
+	if (input.size() == 1)
+	{
+		switch (input[0])
+		{
+		case 'S':
+		case 's':
+			changeMode();
+			break;
+		case '+': {
+			QFloat soHang = nhapSoHangFloat();
+			CongFloat(soHang);
+			break;
+		}
+		case '-': {
+			QFloat soHang = nhapSoHangFloat();
+			CongFloat(soHang);
+			break;
+		}
+		case '*': {
+			QFloat soHang = nhapSoHangFloat();
+			CongFloat(soHang);
+			break;
+		}
+		case '/': {
+			QFloat soHang = nhapSoHangFloat();
+			CongFloat(soHang);
+			break;
+		}
+		case 'Q':
+		case 'q':
+			return -1;
+		default:
+			if (isQFloatConvertValid(input))
+				delete ans;
+				ans = new QFloat(nhapFloat(input));
+			break;
+		}
+		return 0;
+	}
+	else
+	{
+		if (isQFloatConvertValid(input))
+			delete ans;
+			ans = new QFloat(nhapFloat(input));
+		return 0;
+	}
+}
+
+bool Calculator::isQIntConvertValid(string input) {
 	switch (coSo)
 	{
 	case BIN:
@@ -153,15 +222,68 @@ bool Calculator::isNhapOk(string input) {
 	return true;
 }
 
-QInt Calculator::nhapSoHang2() {
+bool Calculator::isQFloatConvertValid(string input) {
+	switch (coSo)
+	{
+	case BIN:
+		for (int i = 0; i < (int)input.size(); i++)
+			if (input[i] != '0' && input[i] != '1')
+			{
+				Error.push_back(ERROR_INVALID_INPUT);
+				return false;
+			}
+		break;
+	case DEC:
+	{
+		int i = 0;
+		if (input[i] == '-')
+			i++;
+		for (; i < (int)input.size(); i++)
+			if (input[i] < '0' || input[i] > '9')
+			{
+				Error.push_back(ERROR_INVALID_INPUT);
+				return false;
+			}
+		break;
+	}
+	case HEX:
+		for (int i = 0; i < (int)input.size(); i++)
+			if ((input[i] < '0' || input[i] > '9') && (input[i] < 'A' || input[i] > 'F') && (input[i] < 'a' || input[i] > 'f'))
+			{
+				Error.push_back(ERROR_INVALID_INPUT);
+				return false;
+			}
+		break;
+	default:
+		Error.push_back(ERROR_INVALID_INPUT);
+		return false;
+		break;
+	}
+	return true;
+}
+
+QInt Calculator::nhapSoHangInt() {
 	string input2;
 	cout << "Input term: ";
 	cin >> input2;
 
-	if (isNhapOk(input2)) {
+	if (isQIntConvertValid(input2)) {
 		return QInt(coSo, input2);
 	} else {
 		return QInt();
+	}
+}
+
+QFloat Calculator::nhapSoHangFloat() {
+	string input2;
+	cout << "Input term: ";
+	cin >> input2;
+
+	if (isQFloatConvertValid(input2)) {
+		return QFloat();
+	}
+	else {
+		return QFloat();
 	}
 }
 
@@ -187,17 +309,7 @@ void Calculator::xuatLoi() {
 }
 
 string Calculator::xuatAns() {
-	switch (mode)
-	{
-	case 1: 
-		return xuatInt(); 
-		break;
-	case 2: 
-		return xuatFloat(); 
-		break;
-	default:
-		break;
-	}
+	return ans->getValue();
 }
 
 //Goi QInt.Nhap(), trong QInt.Nhap() co chon he so
@@ -206,46 +318,29 @@ QInt Calculator::nhapInt(string input)
 	return QInt(coSo, input);
 }
 
-//Kiem tra so dang o co so nao,
-//Xuat ket qua ra man hinh theo co so tuong ung.
-//Luu y: dung cac ham getBin(), getHex(), getDec() de xuat ra ket qua tuong ung
-string Calculator::xuatInt()
-{
-	switch (ans.getCoSo())
-	{
-	case BIN: return ans.getBin(); break;
-	case DEC: return ans.getDec(); break;
-	case HEX: return ans.getHex(); break;
-	}
-}
-
-void Calculator::nhapFloat() {
-
-}
-
-string Calculator::xuatFloat() {
-	return string();
+QFloat Calculator::nhapFloat(string input) {
+	return QFloat();
 }
 
 //Cac Ham DoiSangHeSo() doi coSo trong QInt
 void Calculator::DoiSangHeBin()
 {
 	coSo = BIN;
-	ans.setCoSo(coSo);
+	ans->setCoSo(coSo);
 }
 
 
 void Calculator::DoiSangHeDec()
 {
 	coSo = DEC;
-	ans.setCoSo(coSo);
+	ans->setCoSo(coSo);
 }
 
 
 void Calculator::DoiSangHeHex()
 {
 	coSo = HEX;
-	ans.setCoSo(coSo);
+	ans->setCoSo(coSo);
 }
 
 
@@ -253,50 +348,84 @@ void Calculator::DoiSangHeHex()
 //	nhap vao mot doi so
 //	tinh kq
 //	ans <- kq
-void Calculator::Cong(QInt soHang)
+void Calculator::CongInt(QInt soHang)
 {
+	QInt tmp = *(dynamic_cast<QInt*>(ans));
 	if (Error.empty())
-		ans = ans + soHang;
-	if (ans.getCoSo() == -1) {
+		tmp = tmp + soHang;
+	if (tmp.getCoSo() == -1) {
 		Error.push_back(ERROR_BUFFER_OVERFLOW);
-		ans = QInt();
+		delete ans;
+		ans = new QInt();
+	}
+	else {
+		delete ans;
+		ans = new QInt(tmp);
 	}
 }
 
 
-void Calculator::Tru(QInt soHang)
+void Calculator::TruInt(QInt soHang)
 {
+	QInt tmp = *(dynamic_cast<QInt*>(ans));
 	if (Error.empty())
-		ans = ans - soHang;
-	if (ans.getCoSo() == -1) {
+		tmp = tmp - soHang;
+	if (tmp.getCoSo() == -1) {
 		Error.push_back(ERROR_BUFFER_OVERFLOW);
-		ans = QInt();
+		delete ans;
+		ans = new QInt();
+	}
+	else {
+		delete ans;
+		ans = new QInt(tmp);
 	}
 }
 
 
-void Calculator::Nhan(QInt soHang)
+void Calculator::NhanInt(QInt soHang)
 {
+	QInt tmp = *(dynamic_cast<QInt*>(ans));
 	if (Error.empty())
-		ans = ans * soHang;
-	if (ans.getCoSo() == -1) {
+		tmp = tmp * soHang;
+	if (tmp.getCoSo() == -1) {
 		Error.push_back(ERROR_BUFFER_OVERFLOW);
-		ans = QInt();
+		delete ans;
+		ans = new QInt();
+	}
+	else {
+		delete ans;
+		ans = new QInt(tmp);
 	}
 }
 
 
-void Calculator::Chia(QInt soHang)
+void Calculator::ChiaInt(QInt soHang)
 {
+	QInt tmp = *(dynamic_cast<QInt*>(ans));
 	if (Error.empty())
-		ans = ans / soHang;
-	if (ans.getCoSo() == -2) {
-		Error.push_back(ERROR_DIVIDE_BY_0);
-		ans = QInt();
-	} else if (ans.getCoSo() == -1) {
-			Error.push_back(ERROR_BUFFER_OVERFLOW);
-			ans = QInt();
+		tmp = tmp / soHang;
+	if (tmp.getCoSo() == -1) {
+		Error.push_back(ERROR_BUFFER_OVERFLOW);
+		delete ans;
+		ans = new QInt();
 	}
+	else {
+		delete ans;
+		ans = new QInt(tmp);
+	}
+}
+
+void Calculator::CongFloat(QFloat soHang) {
+
+}
+void Calculator::TruFloat(QFloat soHang) {
+
+}
+void Calculator::NhanFloat(QFloat soHang) {
+
+}
+void Calculator::ChiaFloat(QFloat soHang) {
+
 }
 
 int Calculator::getCoSo()

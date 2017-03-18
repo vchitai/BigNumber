@@ -1,55 +1,15 @@
 #pragma once
-#include <iostream>
-#include <stdio.h>
-#include <algorithm>
-#include <math.h>
-#include <string.h>
-#include <string>
-#include <vector>
-using namespace std;
+#include "QNumber.h"
 
-#define BIN 2
-#define DEC 10
-#define HEX 16
-#define MAX_BITS 128
 
-class QInt
+class QInt: public QNumber
 {
 private:
-	//Mang luu 128 bit trong so lon
-	//bit 0: la bit 0 cua data[0]
-	//bit 1: la bit 1 cua data[0]
-	//bit 7: la bit 7 cua data[0]
-	//bit 8: la bit 0 cua data[1]
-	//...
-	char data[16];
-
 	//mang hang luu tru 2^i
 	const static vector<string> luyThua2;
-
-	//coSo luu tru co so dang luu tru
-	//2 : co so 2
-	//10: co so 10
-	//16: co so 16
-	int coSo;
-
 private:
 	//ham khoi tao luy thua 2
 	static const vector <string> khoiTaoLuyThua2();
-
-	//ham so sanh tren he 10, ho tro hai ham cong va tru tren co so 10
-	static int cmp(string a, string b);
-
-	//a + b (tinh o he co so 10)
-	//Luu y: ca a va b deu phai cung la so nguyen duong
-	static string congDec(string a, string b);
-
-	// a - b (tinh o he co so 10)
-	//Luu y: ca a va b deu phai cung la so nguyen duong
-	static string truDec(string a, string b);
-
-	//gan bit tai vi tri pos = value
-	void ganBit(int pos, int value);
 
 public:
 	QInt();
@@ -100,6 +60,8 @@ public:
 	//Luu y: tan dung ham BinToHex(), goi ham getBin() sau do su dung ham BinToHex
 	string getHex();
 
+	string getValue();
+
 	//lay so bu 2
 	QInt layBu2() const;
 
@@ -116,11 +78,6 @@ public:
 	QInt operator / (const QInt& number) const;
 
 	QInt& operator = (const QInt& number);
-
-	//Gan coSo = so
-	void setCoSo(int so);
-	//Lay coSo
-	int getCoSo();
 
 	~QInt();
 };

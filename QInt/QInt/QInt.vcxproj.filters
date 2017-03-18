@@ -24,6 +24,9 @@
     <ClInclude Include="QFloat.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="QNumber.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="QInt.cpp">
@@ -39,6 +42,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="QFloat.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="QNumber.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

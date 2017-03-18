@@ -309,7 +309,10 @@ char QFloat::getBit(int pos) const
 //Luu y: 15 bit luu so mu bieu dien o dang so Bias
 string QFloat::getBin() const
 {
-	return string();
+	string kq = "";
+	for (int i = 0; i < MAX_BITS; i++)
+		kq += (getBit(MAX_BITS - 1 - i) + '0');
+	return kq;
 }
 
 //Truong
@@ -319,7 +322,8 @@ string QFloat::getBin() const
 
 string QFloat::getDec() const
 {
-	return string();
+	SoThapPhan dec = BinToDec(getBin());
+	return (to_string(dec.thapPhan) + "e" + to_string(dec.luyThua));
 }
 
 QFloat QFloat::operator+(const QFloat & number) const

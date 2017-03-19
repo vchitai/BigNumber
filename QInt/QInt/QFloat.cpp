@@ -168,6 +168,53 @@ QFloat::QFloat(string soThapPhan, string soMu)
 	}
 }
 
+#define DAU_PHAN_MU 2
+#define DAU_PHAN_TRI 17
+
+bool KiemTraToan0(string a, int start, int finish)
+{
+	for (int i = start - 1; i < finish; ++i)
+		if (a[i] == '1')
+			return 0;
+	return 1;
+}
+
+bool KiemTraToan1(string a, int start, int finish)
+{
+	for (int i = start - 1; i < finish; ++i)
+		if (a[i] == '0')
+			return 0;
+	return 1;
+}
+
+double Lay30bitsPhanTriToDec(string bin)
+{
+	double kq = 0;
+	double luyThua2 = 1;
+	for (int i = 0; i < 30; ++i)
+	{
+		luyThua2 /= 2;
+		if (bin[i + DAU_PHAN_TRI - 1] == '1')
+			kq += luyThua2;
+	}
+	return kq;
+}
+
+//15 bit luu so mu bieu dien o dang so Bias
+int PhanMuToDec(string bin128)
+{
+	int kq = 0;
+	int luyThua2 = 1;
+	for (int i = DAU_PHAN_TRI - 1; i >= DAU_PHAN_MU - 1; --i)
+	{
+		luyThua2 *= 2;
+		if (bin128[i] == '1')
+			kq += luyThua2;
+	}
+	kq -= (luyThua2 / 2 - 1);
+	return kq;
+}
+
 //Truong
 //Chi lay 30 bit dau trong 112 bit bieu dien de tinh ra phan thap phan (goi gia tri la v)
 //Sau do tinh 2 ^ luyThua => 10 ^ x, x len nen goi v1 = 10 ^ (phan thap phan cua x)
@@ -175,7 +222,43 @@ QFloat::QFloat(string soThapPhan, string soMu)
 //Luu y: 15 bit luu so mu bieu dien o dang so Bias
 SoThapPhan QFloat::BinToDec(string bin) const
 {
-	return SoThapPhan();
+	SoThapPhan kq;
+	//So dang chuan: Gia tri = (dau)1 + phan tri
+	if (bin[0] == 0)
+		kq.thapPhan = 1;
+	else kq.thapPhan = -1;
+	if (KiemTraToan0(bin, DAU_PHAN_MU, DAU_PHAN_TRI - 1))
+	{
+		if (KiemTraToan0(bin, DAU_PHAN_TRI, MAX_BITS))
+			//Phan mu == 0 && Phan tri == 0: So zero
+		{
+			kq.thapPhan = 0;
+			kq.luyThua = 0;
+			return kq;
+		}
+		else kq.thapPhan = 0;	//Phan mu == 0 && Phan tri != 0: So dang khong chuan: Gia tri = 0 + phan tri
+	}
+	else if (KiemTraToan1(bin, DAU_PHAN_MU, DAU_PHAN_TRI - 1))
+	{
+		if (KiemTraToan0(bin, DAU_PHAN_TRI, MAX_BITS))
+			//Phan mu toan 1 && Phan tri == 0: So vo cung
+		{
+			return kq;
+		}
+		else
+			//Phan mu toan 1 && Phan tri != 0: So bao loi
+		{
+			return kq;
+		}
+	}
+	kq.thapPhan += Lay30bitsPhanTriToDec(bin);
+	kq.luyThua = PhanMuToDec(bin);	//Tinh ra 2^luyThua
+	kq.luyThua = kq.luyThua * log10(2);	//Tinh ra 10^luyThua. 2^luyThua = 10^luyThua*log(2)
+	while (abs(kq.thapPhan) < 1)
+	{
+		kq.thapPhan *= 10;
+		kq.luyThua -= 1;
+	}
 }
 
 

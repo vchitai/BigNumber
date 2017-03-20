@@ -108,7 +108,7 @@ SoThapPhan QFloat::valueOf(string thapPhan, string mu) {
 		}
 	}
 	for (int k = thapPhan.size() - 1; k > j; k--) {
-		sauDauPhay += thapPhan[k];
+		sauDauPhay += thapPhan[k] - '0';
 		sauDauPhay /= 10;
 	}
 	res.thapPhan += sauDauPhay;

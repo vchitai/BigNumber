@@ -1,9 +1,9 @@
-﻿Build started 19/03/2017 10:40:54 SA.
-     1>Project "D:\Lap Trinh C\BigNumber\QInt\QInt\QInt.vcxproj" on node 2 (Build target(s)).
-     1>Link:
-         QInt.vcxproj -> D:\Lap Trinh C\BigNumber\QInt\Debug\QInt.exe
-     1>Done Building Project "D:\Lap Trinh C\BigNumber\QInt\QInt\QInt.vcxproj" (Build target(s)).
-
-Build succeeded.
-
-Time Elapsed 00:00:00.06
+﻿  QFloat.cpp
+c:\codes\visual studio\bignumber\qint\qint\qfloat.cpp(49): warning C4018: '<': signed/unsigned mismatch
+c:\codes\visual studio\bignumber\qint\qint\qfloat.cpp(54): warning C4018: '<': signed/unsigned mismatch
+c:\codes\visual studio\bignumber\qint\qint\qfloat.cpp(58): warning C4018: '<': signed/unsigned mismatch
+c:\codes\visual studio\bignumber\qint\qint\qfloat.cpp(59): warning C4018: '<': signed/unsigned mismatch
+c:\codes\visual studio\bignumber\qint\qint\qfloat.cpp(256): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+c:\codes\visual studio\bignumber\qint\qint\qfloat.cpp(262): warning C4715: 'QFloat::BinToDec': not all control paths return a value
+  QInt.vcxproj -> C:\Codes\Visual Studio\BigNumber\QInt\Debug\QInt.exe
+  QInt.vcxproj -> C:\Codes\Visual Studio\BigNumber\QInt\Debug\QInt.pdb (Full PDB)

@@ -71,6 +71,7 @@ void Calculator::printMenu(vector<Command> cm) {
 
 void Calculator::callMenu() {
 	cout << "\t" << xuatAns() << endl;
+	cout << "Current Using: " << (mode == MODE_QINT ? "QINT" : "QFLOAT") << endl;
 	switch (mode)
 	{
 	case MODE_QINT:
@@ -78,6 +79,7 @@ void Calculator::callMenu() {
 		printMenu(QintMenu);
 		break;
 	case MODE_QFLOAT:
+		cout << "Current Numeral System: " << (coSo == BIN ? "BIN" : "DEC") << endl;
 		printMenu(QfloatMenu);
 		break;
 	default:
@@ -184,18 +186,20 @@ bool Calculator::handleQFloatCommand(string input)
 		case 'q':
 			return true;
 		default:
-			if (isQFloatConvertValid(input))
+			if (isQFloatConvertValid(input)) {
 				delete ans;
-			ans = new QFloat(nhapFloat(input));
+				ans = new QFloat(nhapFloat(input));
+			}
 			break;
 		}
 		return false;
 	}
 	else
 	{
-		if (isQFloatConvertValid(input))
+		if (isQFloatConvertValid(input)) {
 			delete ans;
-		ans = new QFloat(nhapFloat(input));
+			ans = new QFloat(nhapFloat(input));
+		}
 		return false;
 	}
 }
@@ -560,7 +564,10 @@ void Calculator::start()
 		callMenu();
 		cout << "Input Command: ";
 		cin >> command;
-		exit = handleQIntCommand(command);
+		if (mode == MODE_QINT)
+			exit = handleQIntCommand(command);
+		else
+			exit = handleQFloatCommand(command);
 	} while (!exit);
 }
 

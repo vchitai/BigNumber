@@ -205,11 +205,11 @@ int PhanMuToDec(string bin128)
 {
 	int kq = 0;
 	int luyThua2 = 1;
-	for (int i = DAU_PHAN_TRI - 1; i >= DAU_PHAN_MU - 1; --i)
+	for (int i = DAU_PHAN_TRI - 2; i >= DAU_PHAN_MU - 1; --i)
 	{
-		luyThua2 *= 2;
 		if (bin128[i] == '1')
 			kq += luyThua2;
+		luyThua2 *= 2;
 	}
 	kq -= (luyThua2 / 2 - 1);
 	return kq;
@@ -224,7 +224,7 @@ SoThapPhan QFloat::BinToDec(string bin) const
 {
 	SoThapPhan kq;
 	//So dang chuan: Gia tri = (dau)1 + phan tri
-	if (bin[0] == 0)
+	if (bin[0] == '0')
 		kq.thapPhan = 1;
 	else kq.thapPhan = -1;
 	if (KiemTraToan0(bin, DAU_PHAN_MU, DAU_PHAN_TRI - 1))
@@ -259,6 +259,7 @@ SoThapPhan QFloat::BinToDec(string bin) const
 		kq.thapPhan *= 10;
 		kq.luyThua -= 1;
 	}
+	return kq;
 }
 
 

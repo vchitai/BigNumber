@@ -4,7 +4,7 @@ QFloat QFloat::BinToQFloat(string b) const
 {
 	QFloat kq;
 	for (int i = 0; i < (int)b.size(); ++i)
-		kq.ganBit(0, b[i] - '0');
+		kq.ganBit(i, b[127 - i] - '0');
 	return kq;
 }
 
@@ -312,7 +312,7 @@ string QFloat::DecToBin(SoThapPhan dec) const
 	//SoThapPhan dec => v * 2 ^ x
 	double y = dec.luyThua * log2(10) - (int)(dec.luyThua * log2(10));
 	int x = (int)(dec.luyThua * log2(10));
-	double v = dec.thapPhan * pow(2, y);
+	double v = dec.thapPhan * pow(2, y) + 1e-9;
 
 	QInt temp;
 	string dayBit = temp.DecToBin(toString((int)v));
@@ -339,7 +339,7 @@ string QFloat::DecToBin(SoThapPhan dec) const
 	}
 
 	v = v - (int)v;
-	while (dayBit.size() < 112 && abs(v - 1) > 1e-9) {
+	while (dayBit.size() < 112) {
 		v *= 2;
 		dayBit += ('0' + (v > 1 - 1e-9));
 		v = v - (int)(v + 1e-9);
@@ -382,7 +382,7 @@ string QFloat::DecToBinU(SoThapPhan dec) const
 	}
 
 	v = v - (int)v;
-	while (dayBit.size() < 112 && abs(v - 1) > 1e-9) {
+	while (dayBit.size() < 112) {
 		v *= 2;
 		dayBit += ('0' + (v > 1 - 1e-9));
 		v = v - (int)(v + 1e-9);
@@ -465,7 +465,7 @@ QFloat QFloat::operator+(const QFloat & number) const
 	}
 
 	cnt = 0;
-	while (cnt++ < 10 && abs(kq.thapPhan) < 0) {
+	while (cnt++ < 10 && abs(kq.thapPhan) < 1) {
 		kq.thapPhan *= 10;
 		kq.luyThua -= 1;
 	}
@@ -490,7 +490,7 @@ QFloat QFloat::operator-(const QFloat & number) const
 	QFloat b = number;
 	QFloat a = *this;
 
-	b.ganBit(0, 1 - b.getBit(0));
+	b.ganBit(127, 1 - b.getBit(0));
 	return a + b;
 }
 
@@ -510,7 +510,7 @@ QFloat QFloat::operator*(const QFloat & number) const
 	}
 
 	cnt = 0;
-	while (cnt++ < 30 && abs(kq.thapPhan) < 0) {
+	while (cnt++ < 30 && abs(kq.thapPhan) < 1) {
 		kq.thapPhan *= 10;
 		kq.luyThua -= 1;
 	}
@@ -552,7 +552,7 @@ QFloat QFloat::operator/(const QFloat & number) const
 	}
 
 	cnt = 0;
-	while (cnt++ < 30 && abs(kq.thapPhan) < 0) {
+	while (cnt++ < 30 && abs(kq.thapPhan) < 1) {
 		kq.thapPhan *= 10;
 		kq.luyThua -= 1;
 	}

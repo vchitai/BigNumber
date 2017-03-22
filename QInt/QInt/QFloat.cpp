@@ -526,80 +526,176 @@ QFloat QFloat::operator-(const QFloat & number) const
 
 QFloat QFloat::operator*(const QFloat & number) const
 {
-	SoThapPhan a = this->BinToDec(this->getBin());
-	SoThapPhan b = number.BinToDec(number.getBin());
+	if (this->equalTo0() || number.equalTo0()) {
+		return QFloat();
+	}
 
-	SoThapPhan kq;
-	kq.thapPhan = a.thapPhan * b.thapPhan;
-	kq.luyThua = a.luyThua + b.luyThua;
+	QFloat number1 = *this;
+	QFloat number2 = number;
+
+	int expo_a = number1.getExpo();
+	int expo_b = number2.getExpo();
+	int expo_res = expo_a + expo_b;
+
+	string signi_a = number1.getSignificand();
+	string signi_b = number2.getSignificand();
+
+	QInt temp_a(2, signi_a);
+	QInt temp_b(2, signi_b);
+
+	int sign_a = number1.getBit(127);
+	int sign_b = number2.getBit(127);
+
+	if (sign_a)
+		temp_a = temp_a.layBu2();
+	if (sign_b)
+		temp_b = temp_b.layBu2();
+
+	QInt a;
+	int pre_q = 0;
+	QInt m = temp_a;
+	QInt q = temp_b;
+
+	for (int i = 128; i > 0; --i) {
+		int q0 = q.getBit(0);
+		if (pre_q != q0)
+			a = (pre_q == 0 ? a - m : a + m);
+
+		int last_bit = a.getBit(0);
+		a = a.shiftRight();
+		q = q.shiftRight();
+		q.ganBit(127, last_bit);
+		pre_q = q0;
+	}
+	
+	string thapPhan = "";
+
+	int i = 127, sl = 31;
+	for (; i >= 0 && a.getBit(i) == 0; --i, --sl);
+	--i;
+	expo_res += sl;
 
 	int cnt = 0;
-	while (cnt++ < 30 && abs(kq.thapPhan) >= 10.0) {
-		kq.thapPhan /= 10;
-		kq.luyThua += 1;
+	for (; cnt < 112 && i >= 0; --i, ++cnt)
+		thapPhan += char(a.getBit(i) + '0');
+
+	for (i = 127; cnt < 112 && i >= 0; --i, ++cnt)
+		thapPhan += char(a.getBit(i) + '0');
+	
+	while (thapPhan.size() < 112) {
+		thapPhan = thapPhan + '0';		
 	}
 
-	cnt = 0;
-	while (cnt++ < 30 && abs(kq.thapPhan) < 1) {
-		kq.thapPhan *= 10;
-		kq.luyThua -= 1;
+	if (expo_res > LIMIT_BIN_EXPO_STANDARD) {
+		QFloat res;
+		res.coSo = -1;
+		return res;
 	}
 
-	if (abs(kq.thapPhan) < 1e-10) {
-		kq.thapPhan = 0;
-		kq.luyThua = 0;
+	if (expo_res < LIMIT_BIN_EXPO_OVERFLOW) {
+		return QFloat();
 	}
 
-	QFloat ketQua;
-	string temp = DecToBin(kq);
-	if (temp[0] == '#')
-		ketQua.coSo = -1;
-	else
-		ketQua = BinToQFloat(temp);
+	QInt temp;
+	string phanMu = temp.DecToBin(toString(expo_res + BIAS));
+	while (phanMu.size() > 15) phanMu.erase(0, 1);
 
-	return ketQua;
+	string bin = "";
+	bin += (sign_a != sign_b ? '1' : '0');
+	bin += phanMu;
+	bin += thapPhan;
+
+	return BinToQFloat(bin);
 }
 
 QFloat QFloat::operator/(const QFloat & number) const
 {
-	SoThapPhan a = this->BinToDec(this->getBin());
-	SoThapPhan b = number.BinToDec(number.getBin());
-
-	if (abs(b.thapPhan) < 1e-10) {
-		QFloat ketQua;
-		ketQua.coSo = -2;
-		return ketQua;
+	if (this->equalTo0()) {
+		return QFloat();
 	}
 
-	SoThapPhan kq;
-	kq.thapPhan = a.thapPhan / b.thapPhan;
-	kq.luyThua = a.luyThua - b.luyThua;
+	if (number.equalTo0()) {
+		QFloat res;
+		res.coSo = -1;
+		return res;
+	}
+
+	QFloat number1 = *this;
+	QFloat number2 = number;
+
+	int expo_a = number1.getExpo();
+	int expo_b = number2.getExpo();
+	int expo_res = expo_a - expo_b;
+
+	string signi_a = number1.getSignificand();
+	string signi_b = number2.getSignificand();
+
+	QInt temp_a(2, signi_a);
+	QInt temp_b(2, signi_b);
+
+	int sign_a = number1.getBit(127);
+	int sign_b = number2.getBit(127);
+
+	if (sign_a)
+		temp_a = temp_a.layBu2();
+	if (sign_b)
+		temp_b = temp_b.layBu2();
+
+	QInt a;
+	int pre_q = 0;
+	QInt m = temp_a;
+	QInt q = temp_b;
+
+	for (int i = 128; i > 0; --i) {
+		int q0 = q.getBit(0);
+		if (pre_q != q0)
+			a = (pre_q == 0 ? a - m : a + m);
+
+		int last_bit = a.getBit(0);
+		a = a.shiftRight();
+		q = q.shiftRight();
+		q.ganBit(127, last_bit);
+		pre_q = q0;
+	}
+
+	string thapPhan = "";
+
+	int i = 127, sl = 31;
+	for (; i >= 0 && a.getBit(i) == 0; --i, --sl);
+	--i;
+	expo_res += sl;
 
 	int cnt = 0;
-	while (cnt++ < 30 && abs(kq.thapPhan) >= 10.0) {
-		kq.thapPhan /= 10;
-		kq.luyThua += 1;
+	for (; cnt < 112 && i >= 0; --i, ++cnt)
+		thapPhan += char(a.getBit(i) + '0');
+
+	for (i = 127; cnt < 112 && i >= 0; --i, ++cnt)
+		thapPhan += char(a.getBit(i) + '0');
+
+	while (thapPhan.size() < 112) {
+		thapPhan = thapPhan + '0';
 	}
 
-	cnt = 0;
-	while (cnt++ < 30 && abs(kq.thapPhan) < 1) {
-		kq.thapPhan *= 10;
-		kq.luyThua -= 1;
+	if (expo_res > LIMIT_BIN_EXPO_STANDARD) {
+		QFloat res;
+		res.coSo = -1;
+		return res;
 	}
 
-	if (abs(kq.thapPhan) < 1e-10) {
-		kq.thapPhan = 0;
-		kq.luyThua = 0;
+	if (expo_res < LIMIT_BIN_EXPO_OVERFLOW) {
+		return QFloat();
 	}
 
-	QFloat ketQua;
-	string temp = DecToBin(kq);
-	if (temp[0] == '#')
-		ketQua.coSo = -1;
-	else
-		ketQua = BinToQFloat(temp);
+	QInt temp;
+	string phanMu = temp.DecToBin(toString(expo_res + BIAS));
+	while (phanMu.size() > 15) phanMu.erase(0, 1);
 
-	return ketQua;
+	string bin = "";
+	bin += (sign_a != sign_b ? '1' : '0');
+	bin += phanMu;
+	bin += thapPhan;
+
+	return BinToQFloat(bin);
 }
 
 string QFloat::getValue()

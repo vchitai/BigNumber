@@ -59,8 +59,10 @@ protected:
 	static string truDec(string a, string b);
 
 	//gan bit tai vi tri pos = value
-	void ganBit(int pos, int value);
+	
 public:
+	void ganBit(int pos, int value);
+
 	QNumber();
 	virtual string getValue() = 0;
 	virtual void setCoSo(int so);

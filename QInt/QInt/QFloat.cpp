@@ -267,7 +267,9 @@ SoThapPhan QFloat::BinToDec(string bin) const
 	}
 	kq.thapPhan += Lay30bitsPhanTriToDec(bin);
 	kq.luyThua = PhanMuToDec(bin);	//Tinh ra 2^luyThua
-	kq.luyThua = kq.luyThua * log10(2);	//Tinh ra 10^luyThua. 2^luyThua = 10^luyThua*log(2)
+	double temp = kq.luyThua * log10(2);	//Tinh ra 10^luyThua. 2^luyThua = 10^luyThua*log(2)
+	kq.luyThua = (int)temp;	//Phan luy thua la so nguyen
+	kq.thapPhan *= pow(10, temp - (int)temp);	//Nhan phan le cua luy thua vao phan thap phan phia truoc
 	while (abs(kq.thapPhan) < 1)
 	{
 		kq.thapPhan *= 10;

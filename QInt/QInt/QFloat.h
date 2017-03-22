@@ -23,6 +23,8 @@ private:
 	void chuanHoaThapPhanBin(string &bin) const;
 
 	QFloat BinToQFloat(string b) const;
+
+	QFloat convertToQFloat(string significand, int expo) const;
 public:
 	QFloat();
 	QFloat(const QFloat &number);
@@ -72,6 +74,12 @@ public:
 	string getDec() const;
 
 	string getValue();
+
+	bool equalTo0() const;
+
+	int getExpo() const;
+
+	string getSignificand() const;
 
 	//Cac ham phep tinh tren QInt (thuc hien tren co so 2)
 	QFloat operator + (const QFloat& number) const;

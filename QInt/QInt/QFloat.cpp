@@ -8,6 +8,52 @@ QFloat QFloat::BinToQFloat(string b) const
 	return kq;
 }
 
+QFloat QFloat::convertToQFloat(string significand, int expo) const
+{
+	char dau = '0';
+	if (significand[0] == '1') {
+		dau = '1';
+		QInt temp(2, significand);
+		significand = temp.layBu2().getBin();
+	}
+
+	QInt number(2, significand);
+	for (int i = 127; i >= 113; i--)
+		if (number.getBit(i)) {
+			number = number.shiftRight();
+			expo++;
+		}
+	int cnt = 0;
+	while (cnt < 112 && number.getBit(112) != 1) {
+		expo--;
+		number = number.shiftLeft();
+		++cnt;
+	}
+
+	if (expo > LIMIT_BIN_EXPO_STANDARD) {
+		QFloat res;
+		res.coSo = -1;
+		return res;
+	}
+
+	if (expo < LIMIT_BIN_EXPO_OVERFLOW) {
+		QFloat res;
+		return res;
+	}
+
+	QInt temp;
+	string phanMu = temp.DecToBin(toString(expo + BIAS));
+	while (phanMu.size() > 15) phanMu.erase(0, 1);
+
+	string bin = "";
+	bin += dau;
+	bin += phanMu;
+	for (int i = 111; i >= 0; --i)
+		bin += char(number.getBit(i) + '0');
+
+	return BinToQFloat(bin);
+}
+
 string QFloat::toString(int dec) const {
 	string res;
 	while (dec > 0) {
@@ -437,47 +483,36 @@ string QFloat::getDec() const
 
 QFloat QFloat::operator+(const QFloat & number) const
 {
-	SoThapPhan a = this->BinToDec(this->getBin());
-	SoThapPhan b = number.BinToDec(number.getBin());
+	QFloat a = *this;
+	QFloat b = number;
 
-	if (a.luyThua > b.luyThua)
-		swap(a, b);
+	if (a.equalTo0())
+		return b;
+	if (b.equalTo0())
+		return a;
 
-	if (a.luyThua + 10 < b.luyThua)
-		return BinToQFloat(DecToBin(b));
+	int expo_a = a.getExpo();
+	int expo_b = b.getExpo();
 
-	b.thapPhan *= pow(10, b.luyThua - a.luyThua);
-	b.luyThua = a.luyThua;
+	string signi_a = a.getSignificand();
+	string signi_b = b.getSignificand();
 
-	SoThapPhan kq;
-	kq.thapPhan = a.thapPhan + b.thapPhan;
-	kq.luyThua = a.luyThua;
-
-	int cnt = 0;
-	while (cnt++ < 10 && abs(kq.thapPhan) >= 10.0) {
-		kq.thapPhan /= 10;
-		kq.luyThua += 1;
+	if (expo_a > expo_b) {
+		swap(expo_a, expo_b);
+		swap(signi_a, signi_b);
 	}
 
-	cnt = 0;
-	while (cnt++ < 10 && abs(kq.thapPhan) < 1) {
-		kq.thapPhan *= 10;
-		kq.luyThua -= 1;
+	if (expo_b - expo_a > 112)
+		return b;
+
+	QInt temp_a(2, signi_a);
+	QInt temp_b(2, signi_b);
+	while (expo_a != expo_b) {
+		temp_a = temp_a.shiftRight();
+		expo_a++;
 	}
 
-	if (abs(kq.thapPhan) < 1e-10) {
-		kq.thapPhan = 0;
-		kq.luyThua = 0;
-	}
-
-	QFloat ketQua;
-	string temp = DecToBin(kq);
-	if (temp[0] == '#')
-		ketQua.coSo = -1;
-	else
-		ketQua = BinToQFloat(temp);
-
-	return ketQua;
+	return convertToQFloat((temp_a + temp_b).getBin(), expo_a);
 }
 
 QFloat QFloat::operator-(const QFloat & number) const
@@ -575,4 +610,39 @@ string QFloat::getValue()
 	case DEC: return getDec(); break;
 	default: return string(); break;
 	}
+}
+
+bool QFloat::equalTo0() const
+{
+	int number_0 = 0;
+	for (int i = 111; i >= 0; --i)
+		number_0 += 1 - this->getBit(i);
+	return (number_0 == 112);
+}
+
+int QFloat::getExpo() const
+{
+	int res = 0;
+	for (int i = 126; i >= 112; --i) {
+		res = (res << 1) + this->getBit(i);
+	}
+	return res - BIAS;
+}
+
+string QFloat::getSignificand() const
+{
+	string res = "";
+	for (int i = 127; i >= 113; --i)
+		res = res + '0';
+	res = res + '1';
+
+	for (int i = 111; i >= 0; --i)
+		res = res + char(this->getBit(i) + '0');
+
+	if (this->getBit(127)) {
+		QInt temp(2, res);
+		res = temp.layBu2().getBin();
+	}
+
+	return res;
 }

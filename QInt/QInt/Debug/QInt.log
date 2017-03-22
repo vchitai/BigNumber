@@ -1,2 +1,14 @@
-﻿  QInt.vcxproj -> C:\Codes\Visual Studio\BigNumber\QInt\Debug\QInt.exe
+﻿  QFloat.cpp
+c:\codes\visual studio\bignumber\qint\qint\qfloat.cpp(52): warning C4018: '<': signed/unsigned mismatch
+c:\codes\visual studio\bignumber\qint\qint\qfloat.cpp(57): warning C4018: '<': signed/unsigned mismatch
+c:\codes\visual studio\bignumber\qint\qint\qfloat.cpp(61): warning C4018: '<': signed/unsigned mismatch
+c:\codes\visual studio\bignumber\qint\qint\qfloat.cpp(62): warning C4018: '<': signed/unsigned mismatch
+c:\codes\visual studio\bignumber\qint\qint\qfloat.cpp(270): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+  Calculator.cpp
+c:\codes\visual studio\bignumber\qint\qint\calculator.cpp(17): warning C4018: '<': signed/unsigned mismatch
+c:\codes\visual studio\bignumber\qint\qint\calculator.cpp(22): warning C4018: '<': signed/unsigned mismatch
+  Generating Code...
+  Skipping... (no relevant changes detected)
+  Source.cpp
+  QInt.vcxproj -> C:\Codes\Visual Studio\BigNumber\QInt\Debug\QInt.exe
   QInt.vcxproj -> C:\Codes\Visual Studio\BigNumber\QInt\Debug\QInt.pdb (Full PDB)

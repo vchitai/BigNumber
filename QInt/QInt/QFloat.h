@@ -37,7 +37,7 @@ public:
 	//Cach chuyen: Sau khi chuan hoa co dang a.bcd * 10 ^ x
 	//Ap dung may cong thuc log de tinh, luu y chuyen a.bcd thanh so roi nhan voi phan le cua 10 ^ x sau khi chuyen thanh log
 	//Luu y: 15 bit luu so mu bieu dien o dang so Bias
-	QFloat(string soThapPhan, string soMu);
+	QFloat(int so, string soThapPhan, string soMu);
 
 	//Truong
 	//Chi lay 30 bit dau trong 112 bit bieu dien de tinh ra phan thap phan (goi gia tri la v)

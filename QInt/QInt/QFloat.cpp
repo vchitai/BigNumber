@@ -143,31 +143,42 @@ SoThapPhan QFloat::valueOf(string thapPhan, string mu) {
 //Cach chuyen: Sau khi chuan hoa co dang a.bcd * 10 ^ x
 //Ap dung may cong thuc log de tinh, luu y chuyen a.bcd thanh so roi nhan voi phan le cua 10 ^ x sau khi chuyen thanh log
 //Luu y: 15 bit luu so mu bieu dien o dang so Bias
-QFloat::QFloat(string soThapPhan, string soMu)
+QFloat::QFloat(int so, string soThapPhan, string soMu)
 {
-	setCoSo(DEC);
-	chuanHoaDec(soThapPhan, soMu);
-	if (cmp(soMu, toString(LIMIT_DEC_EXPO_OVERFLOW)) == -1 || cmp(soMu, toString(LIMIT_DEC_EXPO_STANDARD)) == 1)
-		coSo = -1;
-	else if (cmp(soMu, toString(LIMIT_DEC_EXPO_OVERFLOW)) == 1 && cmp(soMu, toString(-LIMIT_DEC_EXPO_STANDARD)) == -1)
-		coSo = -coSo;
-	
-	string realValue;
-	realValue = DecToBin(valueOf(soThapPhan, soMu));
-	// Nhi phan
-	if (realValue.size() != 0) { 
-		if (realValue[0] != '#')
-		{
-			for (int i = 0; i < (int)realValue.size(); i++)
-				if (realValue[127 - i] == '1')
-					ganBit(i, 1);
-				else
-					ganBit(i, 0);
-		}
-		else
-		{
+	setCoSo(so);
+	if (coSo == DEC) {
+		chuanHoaDec(soThapPhan, soMu);
+		if (cmp(soMu, toString(LIMIT_DEC_EXPO_OVERFLOW)) == -1 || cmp(soMu, toString(LIMIT_DEC_EXPO_STANDARD)) == 1)
 			coSo = -1;
+		else if (cmp(soMu, toString(LIMIT_DEC_EXPO_OVERFLOW)) == 1 && cmp(soMu, toString(-LIMIT_DEC_EXPO_STANDARD)) == -1)
+			coSo = -coSo;
+
+		string realValue;
+		realValue = DecToBin(valueOf(soThapPhan, soMu));
+		// Nhi phan
+		if (realValue.size() != 0) {
+			if (realValue[0] != '#')
+			{
+				for (int i = 0; i < (int)realValue.size(); i++)
+					if (realValue[127 - i] == '1')
+						ganBit(i, 1);
+					else
+						ganBit(i, 0);
+			}
+			else
+			{
+				coSo = -1;
+			}
 		}
+	}
+	else {
+		string realValue = soThapPhan;
+
+		for (int i = 0; i < (int)realValue.size(); i++)
+			if (realValue[127 - i] == '1')
+				ganBit(i, 1);
+			else
+				ganBit(i, 0);
 	}
 }
 

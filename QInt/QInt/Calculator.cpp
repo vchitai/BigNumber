@@ -56,6 +56,8 @@ void Calculator::initQFloatMenu() {
 	if (QfloatMenu.size() > 0)
 		return;
 	QfloatMenu.push_back(Command('S', "Chuyen sang QInt"));
+	QfloatMenu.push_back(Command('N', "Chuyen sang he BIN"));
+	QfloatMenu.push_back(Command('T', "Chuyen sang he DEC"));
 	QfloatMenu.push_back(Command('+', "Cong"));
 	QfloatMenu.push_back(Command('-', "Tru"));
 	QfloatMenu.push_back(Command('*', "Nhan"));
@@ -161,6 +163,14 @@ bool Calculator::handleQFloatCommand(string input)
 		case 'S':
 		case 's':
 			changeMode();
+			break;
+		case 'T':
+		case 't':
+			DoiSangHeDec();
+			break;
+		case 'N':
+		case 'n':
+			DoiSangHeBin();
 			break;
 		case '+': {
 			QFloat soHang = nhapSoHangFloat();
@@ -348,12 +358,18 @@ QFloat Calculator::nhapSoHangFloat() {
 	string input2;
 	cout << "Input term: ";
 	cin >> input2;
-	string thapPhan;
-	string mu;
-	xuLyFloatInput(input2, thapPhan, mu);
 
 	if (isQFloatConvertValid(input2)) {
-		return QFloat(thapPhan, mu);
+		string thapPhan;
+		string mu;
+		if (coSo == DEC) {
+			xuLyFloatInput(input2, thapPhan, mu);
+		}
+		else if (coSo == BIN) {
+			thapPhan = input2;
+			mu = "";
+		}
+		return QFloat(coSo, thapPhan, mu);
 	}
 	else {
 		return QFloat();
@@ -394,8 +410,14 @@ QInt Calculator::nhapInt(string input)
 QFloat Calculator::nhapFloat(string input) {
 	string thapPhan;
 	string mu;
-	xuLyFloatInput(input, thapPhan, mu);
-	return QFloat(thapPhan, mu);
+	if (coSo == DEC) {
+		xuLyFloatInput(input, thapPhan, mu);
+	}
+	else if (coSo == BIN) {
+		thapPhan = input;
+		mu = "";
+	}
+	return QFloat(coSo, thapPhan, mu);
 }
 
 //Cac Ham DoiSangHeSo() doi coSo trong QInt

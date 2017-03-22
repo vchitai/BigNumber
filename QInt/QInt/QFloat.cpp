@@ -15,7 +15,10 @@ string QFloat::toString(int dec) const {
 		dec = dec / 10;
 	}
 
-	return res;
+	string res2;
+	for (int i = res.length() - 1; i >= 0; i--)
+		res2.push_back(res[i]);
+	return res2;
 }
 
 //Tai

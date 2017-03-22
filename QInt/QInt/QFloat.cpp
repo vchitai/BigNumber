@@ -43,7 +43,8 @@ void QFloat::chuanHoaDec(string & soThapPhan, string & soMu)
 		if (soThapPhan[0] == '-') viTriChamDich++;
 		for (int i = viTriChamHienTai; i > viTriChamDich; i--)
 			swap(soThapPhan[i], soThapPhan[i - 1]);
-		soMu = congDec(soMu, toString(viTriChamHienTai - 1));
+		if (viTriChamHienTai > 0)
+			soMu = congDec(soMu, toString(viTriChamHienTai - viTriChamDich));
 	}
 
 	if (soThapPhan[viTriChamDich - 1] == '0')
@@ -82,12 +83,14 @@ void QFloat::chuanHoaThapPhanBin(string& bin) const {
 
 QFloat::QFloat()
 {
+	coSo = DEC;
 	for (int i = 0; i < 16; ++i)
 		data[i] = 0;
 }
 
 QFloat::QFloat(const QFloat & number)
 {
+	coSo = number.coSo;
 	for (int i = 0; i < 16; ++i)
 		data[i] = number.data[i];
 }
@@ -283,6 +286,7 @@ SoThapPhan QFloat::BinToDec(string bin) const
 
 QFloat & QFloat::operator=(const QFloat & number)
 {
+	coSo = number.coSo;
 	for (int i = 0; i < 16; ++i)
 		data[i] = number.data[i];
 	return *this;

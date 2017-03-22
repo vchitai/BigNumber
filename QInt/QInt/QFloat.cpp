@@ -71,7 +71,7 @@ void QFloat::chuanHoaDec(string & soThapPhan, string & soMu)
 			newThapPhan.append("0.0");
 		}
 		soThapPhan = newThapPhan;
-		soMu = congDec(soMu, toString(luyThua));
+		soMu = truDec(soMu, toString(luyThua));
 	}
 }
 
@@ -151,11 +151,6 @@ QFloat::QFloat(int so, string soThapPhan, string soMu)
 	setCoSo(so);
 	if (coSo == DEC) {
 		chuanHoaDec(soThapPhan, soMu);
-		if (cmp(soMu, toString(LIMIT_DEC_EXPO_OVERFLOW)) == -1 || cmp(soMu, toString(LIMIT_DEC_EXPO_STANDARD)) == 1)
-			coSo = -1;
-		else if (cmp(soMu, toString(LIMIT_DEC_EXPO_OVERFLOW)) == 1 && cmp(soMu, toString(-LIMIT_DEC_EXPO_STANDARD)) == -1)
-			coSo = -coSo;
-
 		string realValue;
 		realValue = DecToBin(valueOf(soThapPhan, soMu));
 		// Nhi phan

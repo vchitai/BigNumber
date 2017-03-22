@@ -283,7 +283,18 @@ bool Calculator::isQFloatConvertValid(string input) {
 		if (input[i] == '-') i++;
 		for (; i < size; i++)
 		{
-
+			if (input[i] == '-')
+			{
+				if (input[i - 1] == 'E' || input[i - 1] == 'e')
+				{
+					continue;
+				}
+				else
+				{
+					Error.push_back(ERROR_INVALID_INPUT);
+					return false;
+				}
+			}
 			if (input[i] == '.')
 			{
 				dot++;
@@ -310,7 +321,7 @@ bool Calculator::isQFloatConvertValid(string input) {
 					Error.push_back(ERROR_INVALID_INPUT);
 					return false;
 				}
-				if (input[i - 1]<'0' || input[i - 1]>'9' || input[i + 1]<'0' || input[i + 1]>'9')
+				if ((input[i - 1]<'0' || input[i - 1]>'9' || input[i + 1]<'0' || input[i + 1]>'9') && input[i + 1] != '-')
 				{
 					Error.push_back(ERROR_INVALID_INPUT);
 					return false;

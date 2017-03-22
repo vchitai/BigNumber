@@ -429,7 +429,15 @@ string QFloat::getBin() const
 string QFloat::getDec() const
 {
 	SoThapPhan dec = BinToDec(getBin());
-	return (to_string(dec.thapPhan) + "e" + to_string(dec.luyThua));
+	string phanTri = to_string(dec.thapPhan);
+	while (phanTri[phanTri.size() - 1] == '0')
+		phanTri.pop_back();
+	if (phanTri[phanTri.size() - 1] == '.')
+		phanTri.pop_back();
+	string phanMu = to_string(dec.luyThua);
+	if (phanMu == "0")
+		return phanTri;
+	return (phanTri+ "e" + phanMu);
 }
 
 QFloat QFloat::operator+(const QFloat & number) const

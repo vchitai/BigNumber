@@ -359,8 +359,12 @@ string QFloat::DecToBin(SoThapPhan dec) const
 
 	QInt temp;
 	string dayBit = temp.DecToBin(toString((int)v));
-	while (dayBit[0] == '0') dayBit.erase(0, 1);
-	dayBit.erase(0, 1);
+	while (dayBit.size() > 0 && dayBit[0] == '0') dayBit.erase(0, 1);
+	bool error = true;
+	if (dayBit.size() > 0) {
+		dayBit.erase(0, 1);
+		error = false;
+	}
 	x += (int)size(dayBit);
 
 	if (abs(v) < 1e-10 || x < LIMIT_BIN_EXPO_OVERFLOW - 112) {
@@ -387,6 +391,21 @@ string QFloat::DecToBin(SoThapPhan dec) const
 		dayBit += ('0' + (v > 1 - 1e-9));
 		v = v - (int)(v + 1e-9);
 	}
+
+	if (error) {
+		while (dayBit.size() > 0 && dayBit[0] == '0') {
+			dayBit.erase(0, 1);
+			x--;
+		}
+		dayBit.erase(0, 1);
+		x--;
+		while (dayBit.size() < 112) {
+			v *= 2;
+			dayBit += ('0' + (v > 1 - 1e-9));
+			v = v - (int)(v + 1e-9);
+		}
+	}
+
 	chuanHoaThapPhanBin(dayBit);
 
 	string phanMu = temp.DecToBin(toString(x + BIAS));
@@ -416,7 +435,12 @@ string QFloat::DecToBinU(SoThapPhan dec) const
 
 	QInt temp;
 	string dayBit = temp.DecToBin(toString((int)v));
-	while (dayBit[0] == '0') dayBit.erase(0, 1);
+	while (dayBit.size() > 0 && dayBit[0] == '0') dayBit.erase(0, 1);
+	bool error = true;
+	if (dayBit.size() > 0) {
+		dayBit.erase(0, 1);
+		error = false;
+	}
 	x += (int)size(dayBit);
 
 	while (x < LIMIT_BIN_EXPO_OVERFLOW) {
@@ -442,6 +466,7 @@ string QFloat::DecToBinU(SoThapPhan dec) const
 
 	return bin;
 }
+
 
 //Lay bit tai vi tri pos
 char QFloat::getBit(int pos) const

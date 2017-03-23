@@ -1,17 +1,2 @@
-﻿  Source.cpp
-  QNumber.cpp
-c:\codes\visual studio\bignumber\qint\qint\qnumber.cpp(23): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\codes\visual studio\bignumber\qint\qint\qnumber.cpp(45): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-  QInt.cpp
-c:\codes\visual studio\bignumber\qint\qint\qint.cpp(105): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\codes\visual studio\bignumber\qint\qint\qint.cpp(168): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\codes\visual studio\bignumber\qint\qint\qint.cpp(169): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-  QFloat.cpp
-c:\codes\visual studio\bignumber\qint\qint\qfloat.cpp(65): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\codes\visual studio\bignumber\qint\qint\qfloat.cpp(164): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-  Calculator.cpp
-c:\codes\visual studio\bignumber\qint\qint\calculator.cpp(282): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-  Generating Code...
-  LINK : C:\Codes\Visual Studio\BigNumber\QInt\x64\Debug\QInt.exe not found or not built by the last incremental link; performing full link
-  QInt.vcxproj -> C:\Codes\Visual Studio\BigNumber\QInt\x64\Debug\QInt.exe
-  QInt.vcxproj -> C:\Codes\Visual Studio\BigNumber\QInt\x64\Debug\QInt.pdb (Full PDB)
+﻿  QInt.vcxproj -> C:\Users\Vinh Ton That\Desktop\BigNumber\QInt\x64\Debug\QInt.exe
+  QInt.vcxproj -> C:\Users\Vinh Ton That\Desktop\BigNumber\QInt\x64\Debug\QInt.pdb (Full PDB)

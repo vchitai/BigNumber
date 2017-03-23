@@ -359,7 +359,7 @@ string QFloat::DecToBin(SoThapPhan dec) const
 	string dayBit = temp.DecToBin(toString((int)v));
 	while (dayBit[0] == '0') dayBit.erase(0, 1);
 	dayBit.erase(0, 1);
-	x += size(dayBit);
+	x += (int)size(dayBit);
 
 	if (abs(v) < 1e-10 || x < LIMIT_BIN_EXPO_OVERFLOW - 112) {
 		string s = "";
@@ -415,7 +415,7 @@ string QFloat::DecToBinU(SoThapPhan dec) const
 	QInt temp;
 	string dayBit = temp.DecToBin(toString((int)v));
 	while (dayBit[0] == '0') dayBit.erase(0, 1);
-	x += size(dayBit);
+	x += (int)size(dayBit);
 
 	while (x < LIMIT_BIN_EXPO_OVERFLOW) {
 		++x;
@@ -641,41 +641,59 @@ QFloat QFloat::operator/(const QFloat & number) const
 	if (sign_b)
 		temp_b = temp_b.layBu2();
 
+	while (cmp(temp_a.getBin(), temp_b.getBin()) == -1) {
+		temp_a = temp_a.shiftLeft();
+		expo_res--;
+	}
+
+	QInt q = temp_a;
+	QInt m = temp_b;
 	QInt a;
-	int pre_q = 0;
-	QInt m = temp_a;
-	QInt q = temp_b;
-
+	
 	for (int i = 128; i > 0; --i) {
-		int q0 = q.getBit(0);
-		if (pre_q != q0)
-			a = (pre_q == 0 ? a - m : a + m);
+		int mb = q.getBit(127);
+		int temp = q.getBit(126);
+		a = a.shiftLeft();
+		q = q.shiftLeft();
+		q.ganBit(127, temp);
+		a.ganBit(0, mb);
 
-		int last_bit = a.getBit(0);
-		a = a.shiftRight();
-		q = q.shiftRight();
-		q.ganBit(127, last_bit);
-		pre_q = q0;
+		a = a - m;
+		if (a.getBit(127) == 1) {
+			a = a + m;
+			q.ganBit(0, 0);
+		}
+		else {
+			q.ganBit(0, 1);
+		}
 	}
 
-	string thapPhan = "";
-
-	int i = 127, sl = 31;
-	for (; i >= 0 && a.getBit(i) == 0; --i, --sl);
-	--i;
-	expo_res += sl;
-
-	int cnt = 0;
-	for (; cnt < 112 && i >= 0; --i, ++cnt)
-		thapPhan += char(a.getBit(i) + '0');
-
-	for (i = 127; cnt < 112 && i >= 0; --i, ++cnt)
-		thapPhan += char(a.getBit(i) + '0');
-
+	string thapPhan = q.getBin();	
+	while (thapPhan.size() > 0 && thapPhan[0] == '0') thapPhan.erase(0, 1);
+	if (thapPhan.size() > 0)
+		thapPhan.erase(0, 1);
+	expo_res += (int)thapPhan.size();
+	
 	while (thapPhan.size() < 112) {
-		thapPhan = thapPhan + '0';
-	}
+		int mb = q.getBit(127);
+		int temp = q.getBit(126);
+		a = a.shiftLeft();
+		q = q.shiftLeft();
+		q.ganBit(127, temp);
+		a.ganBit(0, mb);
 
+		a = a - m;
+		if (a.getBit(127) == 1) {
+			a = a + m;
+			q.ganBit(0, 0);
+			thapPhan += '0';
+		}
+		else {
+			q.ganBit(0, 1);
+			thapPhan += '1';
+		}
+	}
+	
 	if (expo_res > LIMIT_BIN_EXPO_STANDARD) {
 		QFloat res;
 		res.coSo = -1;
@@ -711,9 +729,9 @@ string QFloat::getValue()
 bool QFloat::equalTo0() const
 {
 	int number_0 = 0;
-	for (int i = 111; i >= 0; --i)
+	for (int i = 126; i >= 0; --i)
 		number_0 += 1 - this->getBit(i);
-	return (number_0 == 112);
+	return (number_0 == 127);
 }
 
 int QFloat::getExpo() const

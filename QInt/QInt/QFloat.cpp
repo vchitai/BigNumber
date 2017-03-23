@@ -106,8 +106,10 @@ void QFloat::chuanHoaDec(string & soThapPhan, string & soMu)
 			i++;
 			newThapPhan.push_back('.');
 			if (i < soThapPhan.length()) {
-				while (i < soThapPhan.length())
+				while (i < soThapPhan.length()) {
 					newThapPhan.push_back(soThapPhan[i]);
+					i++;
+				}
 			}
 			else
 				newThapPhan.push_back('0');

@@ -17,6 +17,8 @@
 #define ERROR_CANT_OPEN_FILE_INPUT 104
 #define ERROR_CANT_OPEN_FILE_OUTPUT 105
 
+#define SUCCESSFULLY_WROTE_TO_FILE 106
+
 #define FILE_IN "INPUT.TXT"
 #define FILE_OUT "OUTPUT.TXT"
 
@@ -95,6 +97,7 @@ protected:
 	bool handleQFloatCommand(string input);
 
 	//Xu ly lenh tu file
+	vector<string> splitString(string s, string delimiter);
 	void handleFile(ifstream& ifile, ofstream& ofile);
 	void handleQIntFile();
 	void handleQFloatFile();

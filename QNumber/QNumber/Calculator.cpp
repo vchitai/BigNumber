@@ -416,7 +416,10 @@ void Calculator::xuatLoi() {
 				break;
 			case ERROR_CANT_OPEN_FILE_OUTPUT:
 				cout << "Can't open file output" << endl;
-				break;				
+				break;
+			case SUCCESSFULLY_WROTE_TO_FILE:
+				cout << "Successfully wrote to file" << endl;
+				break;
 			default:
 				break;
 			}
@@ -666,6 +669,22 @@ Calculator::~Calculator()
 		delete ans;
 }
 
+vector<string> Calculator::splitString(string s, string delimiter)
+{
+	string ss = s;
+	vector<string> res;
+	int pos = 0;
+	string tmp;
+	while ((pos = ss.find(delimiter)) != string::npos) {
+		tmp = ss.substr(0, pos);
+		res.push_back(tmp);
+		ss.erase(0, pos + delimiter.length());
+	}
+	res.push_back(ss);
+
+	return res;
+}
+
 void Calculator::handleFile(ifstream& ifile, ofstream& ofile)
 {
 	ifile.open(FILE_IN);
@@ -705,8 +724,98 @@ void Calculator::handleQIntFile()
 	ofstream ofile;
 	handleFile(ifile, ofile);
 	if (Error.empty()) {
+		while (!ifile.eof()) {
+			string s;
+			getline(ifile, s);
+			string delim = " ";
+			vector<string> token = splitString(s, delim);
+			if (token.size() < 3 || token.size() > 4)
+				continue;
 
+			if (token[0] == "2")
+				DoiSangHeBin();
+			else if (token[0] == "10")
+				DoiSangHeDec();
+			else if (token[0] == "16")
+				DoiSangHeHex();
+			else
+				continue;
+
+			if (token.size() == 3) {
+				if (token[1] == "ror") {
+					// goi lam chuan hoa xoa so 0
+				}
+				else if (token[1] == "~") {
+					if (isQIntConvertValid(token[2])) {
+						QInt term1(coSo, token[2]);
+						QInt res = term1.layBu2();
+						ofile << res.getValue();
+					}
+					else
+						continue;
+				}
+				else if (token[1] == "10" || token[1] == "16" || token[1] == "2") {
+					if (isQIntConvertValid(token[2])) {
+						QInt term1(coSo, token[2]);
+						string res;
+						if (token[1] == "10")
+							res = term1.getDec();
+						else if (token[1] == "16")
+							res = term1.getHex();
+						else if (token[1] == "2")
+							res = term1.getBin();
+						ofile << res << endl;
+					}
+				}
+				else
+					break;
+			}
+
+			if (token.size() == 4) {
+				if (token[2] == "*" || token[2] == "+" || token[2] == "-" || token[2] == "/" || token[2] == ">>" || token[2] == "<<") {
+					if (isQIntConvertValid(token[1]) && isQIntConvertValid(token[3])) {
+						QInt term1(coSo, token[1]);
+						QInt term2(coSo, token[3]);
+						QInt res;
+						if (token[2] == "+")
+							res = term1 + term2;
+						else if (token[2] == "-")
+							res = term1 - term2;
+						else if (token[2] == "*")
+							res = term1 * term2;
+						else if (token[2] == "/")
+							res = term1 / term2;
+						else if (token[2] == ">>") {
+							int x = valueOf(token[3]);
+							if (x == -1)
+								continue;
+							else {
+								res = term1;
+								for (int i = 0; i < x; i++)
+									res = res.shiftRight();
+							}
+						}
+						else if (token[2] == "<<") {
+							int x = valueOf(token[3]);
+							if (x == -1)
+								continue;
+							else {
+								res = term1;
+								for (int i = 0; i < x; i++)
+									res = res.shiftLeft();
+							}
+						}
+						ofile << res.getValue() << endl;
+					}
+				}
+			}
+			ifile.close();
+			ofile.close();
+			Error.push_back(SUCCESSFULLY_WROTE_TO_FILE);
+		}
 	}
+	if (ifile.is_open())
+		ifile.close();
 }
 
 void Calculator::handleQFloatFile()
@@ -715,6 +824,9 @@ void Calculator::handleQFloatFile()
 	ofstream ofile;
 	handleFile(ifile, ofile);
 	if (Error.empty()) {
-
+		ifile.close();
+		ofile.close();
 	}
+	if (ifile.is_open())
+		ifile.close();
 }

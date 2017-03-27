@@ -94,3 +94,16 @@ string toString(int dec) {
 		res2.push_back(res[i]);
 	return res2;
 }
+
+int valueOf(string s) {
+	int res = 0;
+	for (int i = 0; i < s.length(); i++) {
+		if (s[i] < '0' || s[i] > '9')
+			return -1;
+		else {
+			res *= 10;
+			res += s[i] - '0';
+		}
+	}
+	return res;
+}

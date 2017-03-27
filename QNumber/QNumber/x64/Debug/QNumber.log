@@ -1,0 +1,16 @@
+﻿  Source.cpp
+  QNumber.cpp
+c:\codes\visual studio\bignumber\qnumber\qnumber\qnumber.cpp(23): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\codes\visual studio\bignumber\qnumber\qnumber\qnumber.cpp(45): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  QInt.cpp
+c:\codes\visual studio\bignumber\qnumber\qnumber\qint.cpp(105): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\codes\visual studio\bignumber\qnumber\qnumber\qint.cpp(168): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\codes\visual studio\bignumber\qnumber\qnumber\qint.cpp(169): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  QFloat.cpp
+c:\codes\visual studio\bignumber\qnumber\qnumber\qfloat.cpp(65): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\codes\visual studio\bignumber\qnumber\qnumber\qfloat.cpp(164): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  Calculator.cpp
+c:\codes\visual studio\bignumber\qnumber\qnumber\calculator.cpp(282): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  Generating Code...
+  QNumber.vcxproj -> C:\Codes\Visual Studio\BigNumber\QNumber\x64\Debug\QNumber.exe
+  QNumber.vcxproj -> C:\Codes\Visual Studio\BigNumber\QNumber\x64\Debug\QNumber.pdb (Full PDB)

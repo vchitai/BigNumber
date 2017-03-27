@@ -5,8 +5,6 @@
 class QFloat : public QNumber
 {
 private:
-	//chuyen sang String
-	string toString(int dec) const;
 	//doi so de khoi tao
 	SoThapPhan valueOf(string thapPhan, string mu);
 

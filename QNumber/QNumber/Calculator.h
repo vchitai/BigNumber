@@ -1,5 +1,9 @@
 #pragma once
+
 #include "QFloat.h"
+#include <fstream>
+#include <iostream>
+#include <stdlib.h>
 
 #define DEFAULT_MODE 0
 #define DEFAULT_NUMERAL 10
@@ -10,6 +14,11 @@
 #define ERROR_INVALID_INPUT 101
 #define ERROR_DIVIDE_BY_0 102
 #define ERROR_BUFFER_OVERFLOW 103
+#define ERROR_CANT_OPEN_FILE_INPUT 104
+#define ERROR_CANT_OPEN_FILE_OUTPUT 105
+
+#define FILE_IN "INPUT.TXT"
+#define FILE_OUT "OUTPUT.TXT"
 
 struct Command {
 	char commandId;
@@ -84,6 +93,11 @@ protected:
 	//Xu ly lenh
 	bool handleQIntCommand(string input);
 	bool handleQFloatCommand(string input);
+
+	//Xu ly lenh tu file
+	void handleFile(ifstream& ifile, ofstream& ofile);
+	void handleQIntFile();
+	void handleQFloatFile();
 
 	//Bao Loi
 	void xuatLoi();

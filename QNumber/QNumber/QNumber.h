@@ -1,11 +1,7 @@
 #pragma once
 
-#include <iostream>
-#include <stdio.h>
-#include <stdlib.h>
 #include <algorithm>
 #include <math.h>
-#include <string.h>
 #include <string>
 #include <vector>
 
@@ -76,3 +72,5 @@ public:
 	virtual ~QNumber();
 };
 
+//chuyen sang String
+string toString(int dec);

@@ -41,6 +41,7 @@ void Calculator::changeMode() {
 void Calculator::initQIntMenu() {
 	if (QintMenu.size() > 0)
 		return;
+	QintMenu.push_back(Command('R', "Nhap du lieu tu file"));
 	QintMenu.push_back(Command('S', "Chuyen sang QFloat"));
 	QintMenu.push_back(Command('N', "Chuyen sang he BIN"));
 	QintMenu.push_back(Command('H', "Chuyen sang he HEX"));
@@ -55,6 +56,7 @@ void Calculator::initQIntMenu() {
 void Calculator::initQFloatMenu() {
 	if (QfloatMenu.size() > 0)
 		return;
+	QfloatMenu.push_back(Command('R', "Nhap du lieu tu file"));
 	QfloatMenu.push_back(Command('S', "Chuyen sang QInt"));
 	QfloatMenu.push_back(Command('N', "Chuyen sang he BIN"));
 	QfloatMenu.push_back(Command('T', "Chuyen sang he DEC"));
@@ -96,6 +98,10 @@ bool Calculator::handleQIntCommand(string input)
 	{
 		switch (input[0])
 		{
+		case 'R':
+		case 'r':
+			handleQIntFile();
+			break;
 		case 'S':
 		case 's':
 			changeMode();
@@ -160,6 +166,10 @@ bool Calculator::handleQFloatCommand(string input)
 	{
 		switch (input[0])
 		{
+		case 'R':
+		case 'r':
+			handleQFloatFile();
+			break;
 		case 'S':
 		case 's':
 			changeMode();
@@ -401,6 +411,12 @@ void Calculator::xuatLoi() {
 			case ERROR_BUFFER_OVERFLOW:
 				cout << "Buffer Overflow" << endl;
 				break;
+			case ERROR_CANT_OPEN_FILE_INPUT:
+				cout << "Can't open file input" << endl;
+				break;
+			case ERROR_CANT_OPEN_FILE_OUTPUT:
+				cout << "Can't open file output" << endl;
+				break;				
 			default:
 				break;
 			}
@@ -648,4 +664,57 @@ Calculator::~Calculator()
 {
 	if (ans != NULL)
 		delete ans;
+}
+
+void Calculator::handleFile(ifstream& ifile, ofstream& ofile)
+{
+	ifile.open(FILE_IN);
+	if (!ifile.is_open()) {
+		string fileName;
+		cout << "Input input filename: ";
+		cin >> fileName;
+		ifile.close();
+		ifile.open(fileName);
+	}
+	if (ifile.is_open()) {
+		ifstream checker;
+		checker.open(FILE_OUT);
+		if (checker.is_open())
+		{
+			checker.close();
+			ofile.open(FILE_OUT);
+		} else {
+			string fileName;
+			cout << "Input output filename: ";
+			cin >> fileName;
+			ofile.close();
+			ofile.open(fileName);
+			if (!ofile.is_open()) {
+				Error.push_back(ERROR_CANT_OPEN_FILE_OUTPUT);
+				return;
+			}
+		}
+	} else {
+		Error.push_back(ERROR_CANT_OPEN_FILE_INPUT);
+	}
+}
+
+void Calculator::handleQIntFile()
+{
+	ifstream ifile;
+	ofstream ofile;
+	handleFile(ifile, ofile);
+	if (Error.empty()) {
+
+	}
+}
+
+void Calculator::handleQFloatFile()
+{
+	ifstream ifile;
+	ofstream ofile;
+	handleFile(ifile, ofile);
+	if (Error.empty()) {
+
+	}
 }

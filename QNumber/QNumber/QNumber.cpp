@@ -81,3 +81,16 @@ int QNumber::getCoSo() {
 QNumber::~QNumber()
 {
 }
+
+string toString(int dec) {
+	string res;
+	while (dec > 0) {
+		res.push_back('0' + dec % 10);
+		dec = dec / 10;
+	}
+
+	string res2;
+	for (int i = res.length() - 1; i >= 0; i--)
+		res2.push_back(res[i]);
+	return res2;
+}

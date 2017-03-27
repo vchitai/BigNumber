@@ -54,19 +54,6 @@ QFloat QFloat::convertToQFloat(string significand, int expo) const
 	return BinToQFloat(bin);
 }
 
-string QFloat::toString(int dec) const {
-	string res;
-	while (dec > 0) {
-		res.push_back('0' + dec % 10);
-		dec = dec / 10;
-	}
-
-	string res2;
-	for (int i = res.length() - 1; i >= 0; i--)
-		res2.push_back(res[i]);
-	return res2;
-}
-
 //Tai
 //ham chuan hoa gia tri nhap vao ve dang a.bcd * 10 ^ x.
 //ket qua luu thang vao soThapPhan, soMu (truyen kieu tham bien)

@@ -155,6 +155,11 @@ bool Calculator::handleQIntCommand(string input)
 		if (isQIntConvertValid(input)) {
 			delete ans;
 			ans = new QInt(nhapInt(input));
+			if (ans->getCoSo() == -1) {
+				delete ans;
+				Error.push_back(ERROR_BUFFER_OVERFLOW);
+				ans = new QInt();
+			}
 		}
 		return false;
 	}
@@ -219,6 +224,11 @@ bool Calculator::handleQFloatCommand(string input)
 		if (isQFloatConvertValid(input)) {
 			delete ans;
 			ans = new QFloat(nhapFloat(input));
+			if (ans->getCoSo() == -1) {
+				delete ans;
+				Error.push_back(ERROR_BUFFER_OVERFLOW);
+				ans = new QFloat();
+			}
 		}
 		return false;
 	}
@@ -589,10 +599,10 @@ void Calculator::ChiaFloat(QFloat soHang) {
 	QFloat tmp = *(dynamic_cast<QFloat*>(ans));
 	if (Error.empty())
 		tmp = tmp / soHang;
-	if (tmp.getCoSo() == -3) {
+	if (tmp.getCoSo() == -2) {
 		Error.push_back(ERROR_DIVIDE_BY_0);
 		delete ans;
-		ans = new QInt();
+		ans = new QFloat();
 	} else if (tmp.getCoSo() == -1) {
 		Error.push_back(ERROR_BUFFER_OVERFLOW);
 		delete ans;
@@ -748,7 +758,7 @@ void Calculator::handleQIntFile()
 				else if (token[1] == "~") {
 					if (isQIntConvertValid(token[2])) {
 						QInt term1(coSo, token[2]);
-						QInt res = term1.layBu2();
+						QInt res = ~term1;
 						ofile << res.getValue();
 					}
 					else
@@ -761,9 +771,9 @@ void Calculator::handleQIntFile()
 						if (token[1] == "10")
 							res = term1.getDec();
 						else if (token[1] == "16")
-							res = term1.getHex();
+							res = term1.getOutHex(term1.getHex());
 						else if (token[1] == "2")
-							res = term1.getBin();
+							res = term1.getOutBin(term1.getBin());
 						ofile << res << endl;
 					}
 				}
@@ -809,10 +819,11 @@ void Calculator::handleQIntFile()
 					}
 				}
 			}
-			ifile.close();
-			ofile.close();
-			Error.push_back(SUCCESSFULLY_WROTE_TO_FILE);
+			
 		}
+		ifile.close();
+		ofile.close();
+		Error.push_back(SUCCESSFULLY_WROTE_TO_FILE);
 	}
 	if (ifile.is_open())
 		ifile.close();

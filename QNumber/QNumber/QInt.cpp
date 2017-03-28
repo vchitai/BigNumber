@@ -34,6 +34,11 @@ QInt::QInt(int so, string input) {
 	default: break;
 	}
 
+	if (realValue == "#") {
+		setCoSo(-1);
+		return;
+	}
+
 	if (realValue.size() != 0) {
 		for (int i = 0; i < (int)realValue.size(); i++)
 			if (realValue[127 - i] == '1')
@@ -120,6 +125,8 @@ string QInt::DecToBin(string dec)
 			bin.append("0");
 		}
 	}
+	if (cmp(dec, "0") != 0)
+		return "#";
 	if (dau == 1) {
 		QInt res(2, bin);
 		bin = res.layBu2().getBin();
@@ -287,6 +294,12 @@ QInt QInt::operator-(const QInt & number) const
 
 QInt QInt::operator*(const QInt & number) const
 {
+	if (this->coSo == -1 || number.coSo == -1) {
+		QInt res;
+		res.setCoSo(-1);
+		return res;
+	}
+
 	QInt a;
 	int pre_q = 0;
 	QInt m = number;
@@ -381,6 +394,14 @@ QInt QInt::operator/(const QInt & number) const
 	return q;
 }
 
+QInt QInt::operator~() const
+{
+	QInt kq;
+	for (int i = 0; i < 128; ++i)
+		kq.ganBit(i, 1 - this->getBit(i));
+	return kq;
+}
+
 QInt & QInt::operator=(const QInt & number)
 {
 	for (int i = 0; i < 16; ++i)
@@ -389,12 +410,26 @@ QInt & QInt::operator=(const QInt & number)
 	return *this;
 }
 
+string QInt::getOutBin(string bin)
+{
+	while (bin.size() > 0 && bin[0] == '0') bin.erase(0, 1);
+	if (bin.size() == 0) bin = "0";
+	return bin;
+}
+
+string QInt::getOutHex(string bin)
+{
+	while (bin.size() > 0 && bin[0] == '0') bin.erase(0, 1);
+	if (bin.size() == 0) bin = "0";
+	return bin;
+}
+
 string QInt::getValue() {
 	switch (coSo)
 	{
-	case BIN: return getBin(); break;
+	case BIN: return getOutBin(getBin()); break;
 	case DEC: return getDec(); break;
-	case HEX: return getHex(); break;
+	case HEX: return getOutHex(getHex()); break;
 	default: return string();
 		break;
 	}

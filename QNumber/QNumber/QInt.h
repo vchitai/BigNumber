@@ -77,8 +77,12 @@ public:
 	QInt operator - (const QInt& number) const;
 	QInt operator * (const QInt& number) const;
 	QInt operator / (const QInt& number) const;
+	QInt operator ~ () const;
 
 	QInt& operator = (const QInt& number);
+
+	string getOutBin(string bin);
+	string getOutHex(string bin);
 
 	~QInt();
 };

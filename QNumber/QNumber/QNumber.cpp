@@ -7,6 +7,20 @@ QNumber::QNumber()
 //ham so sanh tren he 10, ho tro hai ham cong va tru tren co so 10
 int QNumber::cmp(string a, string b)
 {
+	if (a[0] == '-' && b[0] == '-') {
+		a.erase(0, 1);
+		b.erase(0, 1);
+		return -cmp(a, b);
+	}
+
+	if (a[0] == '-') {
+		return -1;
+	}
+
+	if (b[0] == '-') {
+		return 1;
+	}
+
 	while (a.size() < b.size()) a = '0' + a;
 	while (b.size() < a.size()) b = '0' + b;
 	return (a == b ? 0 : (a > b ? 1 : -1));
@@ -16,6 +30,22 @@ int QNumber::cmp(string a, string b)
 //Luu y: ca a va b deu phai cung la so nguyen duong
 string QNumber::congDec(string a, string b)
 {
+	if (a[0] == '-' && b[0] == '-') {
+		a.erase(0, 1);
+		b.erase(0, 1);
+		return truDec("0", congDec(a, b));
+	}
+
+	if (a[0] == '-') {
+		a.erase(0, 1);
+		return truDec(b, a);
+	}
+
+	if (b[0] == '-') {
+		b.erase(0, 1);
+		return truDec(a, b);
+	}
+
 	int sum = 0, carry = 0;
 	string c = "";
 	while (a.size() < b.size()) a = '0' + a;
@@ -33,6 +63,22 @@ string QNumber::congDec(string a, string b)
 //Luu y: ca a va b deu phai cung la so nguyen duong
 string QNumber::truDec(string a, string b)
 {
+	if (a[0] == '-' && b[0] == '-') {
+		a.erase(0, 1);
+		b.erase(0, 1);
+		return truDec(b, a);
+	}
+
+	if (a[0] == '-') {
+		a.erase(0, 1);
+		return truDec("0", congDec(a, b));
+	}
+
+	if (b[0] == '-') {
+		b.erase(0, 1);
+		return congDec(a, b);
+	}
+
 	int dau = 1;
 	if (cmp(a, b) == -1) {
 		dau = -1;
@@ -84,6 +130,12 @@ QNumber::~QNumber()
 
 string toString(int dec) {
 	string res;
+	bool dau = false;
+	if (dec < 0) {
+		dec = -dec;
+		dau = true;
+	}
+
 	while (dec > 0) {
 		res.push_back('0' + dec % 10);
 		dec = dec / 10;
@@ -92,6 +144,11 @@ string toString(int dec) {
 	string res2;
 	for (int i = res.length() - 1; i >= 0; i--)
 		res2.push_back(res[i]);
+
+	if (dau) {
+		res2 = "-" + res2;
+	}
+
 	return res2;
 }
 

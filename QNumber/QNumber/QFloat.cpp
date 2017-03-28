@@ -186,6 +186,17 @@ QFloat::QFloat(int so, string soThapPhan, string soMu)
 	setCoSo(so);
 	if (coSo == DEC) {
 		chuanHoaDec(soThapPhan, soMu);
+
+		if (cmp(soMu, toString(LIMIT_DEC_EXPO_STANDARD)) == 1) {
+			coSo = -1;
+			return;
+		}
+
+		if (cmp(soMu, toString(LIMIT_DEC_EXPO_OVERFLOW)) == -1) {
+			coSo = -1;
+			return;
+		}
+
 		string realValue;
 		SoThapPhan value = valueOf(soThapPhan, soMu);
 		if (value.thapPhan == 0)
@@ -504,6 +515,12 @@ string QFloat::getDec() const
 
 QFloat QFloat::operator+(const QFloat & number) const
 {
+	if (this->coSo == -1 || number.coSo == -1) {
+		QFloat res;
+		res.coSo = -1;
+		return res;
+	}
+
 	QFloat a = *this;
 	QFloat b = number;
 
@@ -538,6 +555,12 @@ QFloat QFloat::operator+(const QFloat & number) const
 
 QFloat QFloat::operator-(const QFloat & number) const
 {
+	if (this->coSo == -1 || number.coSo == -1) {
+		QFloat res;
+		res.coSo = -1;
+		return res;
+	}
+
 	QFloat b = number;
 	QFloat a = *this;
 
@@ -547,6 +570,12 @@ QFloat QFloat::operator-(const QFloat & number) const
 
 QFloat QFloat::operator*(const QFloat & number) const
 {
+	if (this->coSo == -1 || number.coSo == -1) {
+		QFloat res;
+		res.coSo = -1;
+		return res;
+	}
+
 	if (this->equalTo0() || number.equalTo0()) {
 		return QFloat();
 	}
@@ -631,14 +660,20 @@ QFloat QFloat::operator*(const QFloat & number) const
 
 QFloat QFloat::operator/(const QFloat & number) const
 {
-	if (this->equalTo0()) {
-		return QFloat();
+	if (this->coSo == -1 || number.coSo == -1) {
+		QFloat res;
+		res.coSo = -1;
+		return res;
 	}
 
 	if (number.equalTo0()) {
 		QFloat res;
-		res.coSo = -1;
+		res.coSo = -2;
 		return res;
+	}
+
+	if (this->equalTo0()) {
+		return QFloat();
 	}
 
 	QFloat number1 = *this;

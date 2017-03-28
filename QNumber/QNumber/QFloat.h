@@ -8,14 +8,8 @@ private:
 	//doi so de khoi tao
 	SoThapPhan valueOf(string thapPhan, string mu);
 
-	//Tai
 	//ham chuan hoa gia tri nhap vao ve dang a.bcd * 10 ^ x.
 	//ket qua luu thang vao soThapPhan, soMu (truyen kieu tham bien)
-	//luu y cac truong hop sau:
-	//1: khong co dau '.', them vao cuoi xau ".0"
-	//2: dang abcd.efgh * 10 ^ x => a.bcdefgh * 10^y (y != x)
-	//3: dang 0.000abc * 10 ^ x => a.bc * 10^y (y != x)
-	//soMu nho nen chuyen soMu ve dang so nguyen roi cong tru tren soMu luon
 	void chuanHoaDec(string &soThapPhan, string &soMu);
 
 	void chuanHoaThapPhanBin(string &bin) const;
@@ -28,20 +22,9 @@ public:
 	QFloat();
 	QFloat(const QFloat &number);
 
-	//Tai
 	//Chuyen so dang (soThapPhan * 10 ^ soMu) ve dang bieu dien nhi phan
-	//Dau tien phai chuan hoa so nhap vao ve dang: a.bcd * 10 ^ x, goi ham chuan hoa tren
-	//Kiem tra xem so nhap vao
-	//1: O dang chua
-	//2: O dang khong chuan
-	//3: bi tran so
-	//Cach chuyen: Sau khi chuan hoa co dang a.bcd * 10 ^ x
-	//Ap dung may cong thuc log de tinh, luu y chuyen a.bcd thanh so roi nhan voi phan le cua 10 ^ x sau khi chuyen thanh log
-	//Luu y: 15 bit luu so mu bieu dien o dang so Bias
 	QFloat(int so, string soThapPhan, string soMu);
 
-	//Truong
-	//Chi lay 30 bit dau trong 112 bit bieu dien de tinh ra phan thap phan (goi gia tri la v)
 	//Sau do tinh 2 ^ luyThua => 10 ^ x, x len nen goi v1 = 10 ^ (phan thap phan cua x)
 	//Nhan phan thap phan sau khi lay log de nhan voi v (y la v = v1 * v) 
 	//Luu y: 15 bit luu so mu bieu dien o dang so Bias

@@ -1,9 +1,4 @@
-﻿  Calculator.cpp
-c:\codes\visual studio\bignumber\qnumber\qnumber\calculator.cpp(292): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\codes\visual studio\bignumber\qnumber\qnumber\calculator.cpp(678): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-  Generating Code...
-  Compiling...
-  Source.cpp
-  Generating Code...
+﻿  QFloat.cpp
+c:\codes\visual studio\bignumber\qnumber\qnumber\qfloat.cpp(151): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
   QNumber.vcxproj -> C:\Codes\Visual Studio\BigNumber\QNumber\x64\Debug\QNumber.exe
   QNumber.vcxproj -> C:\Codes\Visual Studio\BigNumber\QNumber\x64\Debug\QNumber.pdb (Full PDB)

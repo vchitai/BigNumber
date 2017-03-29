@@ -408,33 +408,34 @@ QFloat Calculator::nhapSoHangFloat() {
 }
 
 string Calculator::xuatLoi() {
+	string res;
 	if (!Error.empty()) {
 		switch (Error[Error.size()-1])
 		{
 		case ERROR_INVALID_INPUT:
-			return string("Invalid Input");
+			res = string("Invalid Input");
 			break;
 		case ERROR_DIVIDE_BY_0:
-			return string("Division by 0");
+			res = string("Division by 0");
 			break;
 		case ERROR_BUFFER_OVERFLOW:
-			return string("Buffer Overflow");
+			res = string("Buffer Overflow");
 			break;
 		case ERROR_CANT_OPEN_FILE_INPUT:
-			return string("Can't open file input");
+			res = string("Can't open file input");
 			break;
 		case ERROR_CANT_OPEN_FILE_OUTPUT:
-			return string("Can't open file output");
+			res = string("Can't open file output");
 			break;
 		case SUCCESSFULLY_WROTE_TO_FILE:
-			return string("Successfully wrote to file");
+			res = string("Successfully wrote to file");
 			break;
 		default:
 			break;
 		}
 		Error.pop_back();
 	}
-	return string();
+	return res;
 }
 
 string Calculator::xuatAns() {

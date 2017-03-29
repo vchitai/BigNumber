@@ -76,3 +76,4 @@ public:
 string toString(int dec);
 string toString(double dec);
 int valueOf(string s);
+string normalizeString(string s);

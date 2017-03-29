@@ -80,6 +80,8 @@ public:
 
 	QFloat& operator = (const QFloat& number);
 
+	string getOutBin(string bin);
+
 	~QFloat();
 };
 

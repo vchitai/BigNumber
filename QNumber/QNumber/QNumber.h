@@ -75,3 +75,4 @@ public:
 //chuyen sang String
 string toString(int dec);
 int valueOf(string s);
+string normalizeString(string s);

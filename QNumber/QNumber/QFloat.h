@@ -74,6 +74,9 @@ public:
 
 	QFloat& operator = (const QFloat& number);
 
+	string getOutBin(string bin);
+	string getOutHex(string bin);
+
 	~QFloat();
 };
 

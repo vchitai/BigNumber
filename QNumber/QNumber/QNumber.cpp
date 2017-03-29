@@ -164,3 +164,16 @@ int valueOf(string s) {
 	}
 	return res;
 }
+
+string normalizeString(string s)
+{
+	string res;
+	if (s[0] != ' ')
+		res.push_back(s[0]);
+	for (int i = 1; i < s.length(); i++)
+		if (res[i] == ' ' && res[i - 1] == ' ')
+			continue;
+		else
+			res.push_back(s[i]);
+	return res;
+}

@@ -23,7 +23,6 @@ QInt::QInt()
 
 QInt::QInt(int so, string input) {
 	setCoSo(so);
-	// Kiem tra tran so
 	string realValue;
 
 	switch (coSo)

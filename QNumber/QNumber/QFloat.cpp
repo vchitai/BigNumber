@@ -816,3 +816,17 @@ string QFloat::getSignificand() const
 
 	return res;
 }
+
+string QFloat::getOutBin(string bin)
+{
+	while (bin.size() > 0 && bin[0] == '0') bin.erase(0, 1);
+	if (bin.size() == 0) bin = "0";
+	return bin;
+}
+
+string QFloat::getOutHex(string bin)
+{
+	while (bin.size() > 0 && bin[0] == '0') bin.erase(0, 1);
+	if (bin.size() == 0) bin = "0";
+	return bin;
+}

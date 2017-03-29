@@ -407,34 +407,34 @@ QFloat Calculator::nhapSoHangFloat() {
 	}
 }
 
-void Calculator::xuatLoi() {
+string Calculator::xuatLoi() {
 	if (!Error.empty()) {
-		for (int i = 0; i < (int)Error.size(); i++)
-			switch (Error[i])
-			{
-			case ERROR_INVALID_INPUT:
-				cout << "Invalid Input" << endl;
-				break;
-			case ERROR_DIVIDE_BY_0:
-				cout << "Division by 0" << endl;
-				break;
-			case ERROR_BUFFER_OVERFLOW:
-				cout << "Buffer Overflow" << endl;
-				break;
-			case ERROR_CANT_OPEN_FILE_INPUT:
-				cout << "Can't open file input" << endl;
-				break;
-			case ERROR_CANT_OPEN_FILE_OUTPUT:
-				cout << "Can't open file output" << endl;
-				break;
-			case SUCCESSFULLY_WROTE_TO_FILE:
-				cout << "Successfully wrote to file" << endl;
-				break;
-			default:
-				break;
-			}
+		switch (Error[Error.size()-1])
+		{
+		case ERROR_INVALID_INPUT:
+			return string("Invalid Input");
+			break;
+		case ERROR_DIVIDE_BY_0:
+			return string("Division by 0");
+			break;
+		case ERROR_BUFFER_OVERFLOW:
+			return string("Buffer Overflow");
+			break;
+		case ERROR_CANT_OPEN_FILE_INPUT:
+			return string("Can't open file input");
+			break;
+		case ERROR_CANT_OPEN_FILE_OUTPUT:
+			return string("Can't open file output");
+			break;
+		case SUCCESSFULLY_WROTE_TO_FILE:
+			return string("Successfully wrote to file");
+			break;
+		default:
+			break;
+		}
+		Error.pop_back();
 	}
-	Error.clear();
+	return string();
 }
 
 string Calculator::xuatAns() {
@@ -540,11 +540,13 @@ void Calculator::ChiaInt(QInt soHang)
 		Error.push_back(ERROR_DIVIDE_BY_0);
 		delete ans;
 		ans = new QInt();
-	} else if (tmp.getCoSo() == -1) {
+	}
+	else if (tmp.getCoSo() == -1) {
 		Error.push_back(ERROR_BUFFER_OVERFLOW);
 		delete ans;
 		ans = new QInt();
-	} else {
+	}
+	else {
 		delete ans;
 		ans = new QInt(tmp);
 	}
@@ -603,11 +605,13 @@ void Calculator::ChiaFloat(QFloat soHang) {
 		Error.push_back(ERROR_DIVIDE_BY_0);
 		delete ans;
 		ans = new QFloat();
-	} else if (tmp.getCoSo() == -1) {
+	}
+	else if (tmp.getCoSo() == -1) {
 		Error.push_back(ERROR_BUFFER_OVERFLOW);
 		delete ans;
 		ans = new QFloat();
-	} else {
+	}
+	else {
 		delete ans;
 		ans = new QFloat(tmp);
 	}
@@ -622,7 +626,8 @@ void Calculator::start()
 	{
 		system("cls");
 		system("Color FC");
-		xuatLoi();
+		while (Error.size()>0)
+			cout << xuatLoi() << endl;
 		callMenu();
 		cout << "Input Command: ";
 		cin >> command;
@@ -712,7 +717,8 @@ void Calculator::handleFile(ifstream& ifile, ofstream& ofile)
 		{
 			checker.close();
 			ofile.open(FILE_OUT);
-		} else {
+		}
+		else {
 			string fileName;
 			cout << "Input output filename: ";
 			cin >> fileName;
@@ -723,7 +729,8 @@ void Calculator::handleFile(ifstream& ifile, ofstream& ofile)
 				return;
 			}
 		}
-	} else {
+	}
+	else {
 		Error.push_back(ERROR_CANT_OPEN_FILE_INPUT);
 	}
 }
@@ -738,6 +745,7 @@ void Calculator::handleQIntFile()
 			string s;
 			getline(ifile, s);
 			string delim = " ";
+			s = normalizeString(s);
 			vector<string> token = splitString(s, delim);
 			if (token.size() < 3 || token.size() > 4)
 				continue;
@@ -753,20 +761,42 @@ void Calculator::handleQIntFile()
 
 			if (token.size() == 3) {
 				if (token[1] == "ror") {
-					// goi lam chuan hoa xoa so 0
+					if (isQIntConvertValid(token[2])) {
+						QInt term1(coSo, token[2]);
+						if (term1.getCoSo() == -1) {
+							Error.push_back(ERROR_BUFFER_OVERFLOW);
+							continue;
+						}
+						// Goi ham ror QInt res = term1.ror;
+						//ofile << res.getValue();
+					}
+					else {
+						Error.push_back(ERROR_INVALID_INPUT);
+						continue;
+					}
 				}
 				else if (token[1] == "~") {
 					if (isQIntConvertValid(token[2])) {
 						QInt term1(coSo, token[2]);
+						if (term1.getCoSo() == -1) {
+							Error.push_back(ERROR_BUFFER_OVERFLOW);
+							continue;
+						}
 						QInt res = ~term1;
 						ofile << res.getValue();
 					}
-					else
+					else {
+						Error.push_back(ERROR_INVALID_INPUT);
 						continue;
+					}
 				}
 				else if (token[1] == "10" || token[1] == "16" || token[1] == "2") {
 					if (isQIntConvertValid(token[2])) {
 						QInt term1(coSo, token[2]);
+						if (term1.getCoSo() == -1) {
+							Error.push_back(ERROR_BUFFER_OVERFLOW);
+							continue;
+						}
 						string res;
 						if (token[1] == "10")
 							res = term1.getDec();
@@ -775,6 +805,10 @@ void Calculator::handleQIntFile()
 						else if (token[1] == "2")
 							res = term1.getOutBin(term1.getBin());
 						ofile << res << endl;
+					}
+					else {
+						Error.push_back(ERROR_INVALID_INPUT);
+						continue;
 					}
 				}
 				else
@@ -785,16 +819,44 @@ void Calculator::handleQIntFile()
 				if (token[2] == "*" || token[2] == "+" || token[2] == "-" || token[2] == "/" || token[2] == ">>" || token[2] == "<<") {
 					if (isQIntConvertValid(token[1]) && isQIntConvertValid(token[3])) {
 						QInt term1(coSo, token[1]);
+						if (term1.getCoSo() == -1) {
+							Error.push_back(ERROR_BUFFER_OVERFLOW);
+							continue;
+						}
 						QInt term2(coSo, token[3]);
+						if (term2.getCoSo() == -1) {
+							Error.push_back(ERROR_BUFFER_OVERFLOW);
+							continue;
+						}
 						QInt res;
-						if (token[2] == "+")
+						if (token[2] == "+") {
 							res = term1 + term2;
-						else if (token[2] == "-")
+							if (term1.getCoSo() == -1) {
+								Error.push_back(ERROR_BUFFER_OVERFLOW);
+								continue;
+							}
+						}
+						else if (token[2] == "-") {
 							res = term1 - term2;
-						else if (token[2] == "*")
+							if (term1.getCoSo() == -1) {
+								Error.push_back(ERROR_BUFFER_OVERFLOW);
+								continue;
+							}
+						}
+						else if (token[2] == "*") {
 							res = term1 * term2;
-						else if (token[2] == "/")
+							if (term1.getCoSo() == -1) {
+								Error.push_back(ERROR_BUFFER_OVERFLOW);
+								continue;
+							}
+						}
+						else if (token[2] == "/") {
 							res = term1 / term2;
+							if (term1.getCoSo() == -2) {
+								Error.push_back(ERROR_DIVIDE_BY_0);
+								continue;
+							}
+						}
 						else if (token[2] == ">>") {
 							int x = valueOf(token[3]);
 							if (x == -1)
@@ -817,12 +879,19 @@ void Calculator::handleQIntFile()
 						}
 						ofile << res.getValue() << endl;
 					}
+					else {
+						Error.push_back(ERROR_INVALID_INPUT);
+						continue;
+					}
 				}
 			}
-			
+			if (!Error.empty()) {
+				ofile << xuatLoi() << endl;
+			}
 		}
 		ifile.close();
 		ofile.close();
+		DoiSangHeDec();
 		Error.push_back(SUCCESSFULLY_WROTE_TO_FILE);
 	}
 	if (ifile.is_open())
@@ -835,8 +904,104 @@ void Calculator::handleQFloatFile()
 	ofstream ofile;
 	handleFile(ifile, ofile);
 	if (Error.empty()) {
+		while (!ifile.eof()) {
+			string s;
+			getline(ifile, s);
+			string delim = " ";
+			s = normalizeString(s);
+			vector<string> token = splitString(s, delim);
+			if (token.size() < 3 || token.size() > 4)
+				continue;
+
+			if (token[0] == "2")
+				DoiSangHeBin();
+			else if (token[0] == "10")
+				DoiSangHeDec();
+			else
+				continue;
+
+			if (token.size() == 3) {
+				if (token[1] == "10" || token[1] == "2") {
+					if (isQFloatConvertValid(token[2])) {
+						QFloat term1(nhapFloat(token[2]));
+						if (term1.getCoSo() == -1) {
+							Error.push_back(ERROR_BUFFER_OVERFLOW);
+							continue;
+						}
+						string res;
+						if (token[1] == "10")
+							res = term1.getDec();
+						else if (token[1] == "2")
+							res = term1.getOutBin(term1.getBin());
+						ofile << res << endl;
+					}
+					else {
+						Error.push_back(ERROR_INVALID_INPUT);
+						continue;
+					}
+				}
+				else
+					break;
+			}
+
+			if (token.size() == 4) {
+				if (token[2] == "*" || token[2] == "+" || token[2] == "-" || token[2] == "/") {
+					if (isQFloatConvertValid(token[1]) && isQFloatConvertValid(token[3])) {
+						QFloat term1(nhapFloat(token[2]));
+						if (term1.getCoSo() == -1) {
+							Error.push_back(ERROR_BUFFER_OVERFLOW);
+							continue;
+						}
+						QFloat term2(nhapFloat(token[2]));
+						if (term2.getCoSo() == -1) {
+							Error.push_back(ERROR_BUFFER_OVERFLOW);
+							continue;
+						}
+						QFloat res;
+						if (token[2] == "+") {
+							res = term1 + term2;
+							if (term1.getCoSo() == -1) {
+								Error.push_back(ERROR_BUFFER_OVERFLOW);
+								continue;
+							}
+						}
+						else if (token[2] == "-") {
+							res = term1 - term2;
+							if (term1.getCoSo() == -1) {
+								Error.push_back(ERROR_BUFFER_OVERFLOW);
+								continue;
+							}
+						}
+						else if (token[2] == "*") {
+							res = term1 * term2;
+							if (term1.getCoSo() == -1) {
+								Error.push_back(ERROR_BUFFER_OVERFLOW);
+								continue;
+							}
+						}
+						else if (token[2] == "/") {
+							res = term1 / term2;
+							if (term1.getCoSo() == -2) {
+								Error.push_back(ERROR_DIVIDE_BY_0);
+								continue;
+							}
+						}
+						ofile << res.getValue() << endl;
+					}
+					else {
+						Error.push_back(ERROR_INVALID_INPUT);
+						continue;
+					}
+				}
+			}
+			if (!Error.empty()) {
+				ofile << xuatLoi() << endl;
+			}
+		}
 		ifile.close();
 		ofile.close();
+		DoiSangHeDec();
+		Error.push_back(SUCCESSFULLY_WROTE_TO_FILE);
 	}
 	if (ifile.is_open())
 		ifile.close();

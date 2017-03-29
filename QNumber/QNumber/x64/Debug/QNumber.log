@@ -1,0 +1,9 @@
+﻿  Source.cpp
+  QNumber.cpp
+  QInt.cpp
+  QFloat.cpp
+  Calculator.cpp
+c:\users\vinh ton that\desktop\bignumber\qnumber\qnumber\calculator.cpp(688): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  Generating Code...
+  QNumber.vcxproj -> C:\Users\Vinh Ton That\Desktop\BigNumber\QNumber\x64\Debug\QNumber.exe
+  QNumber.vcxproj -> C:\Users\Vinh Ton That\Desktop\BigNumber\QNumber\x64\Debug\QNumber.pdb (Full PDB)

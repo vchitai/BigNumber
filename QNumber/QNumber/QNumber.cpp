@@ -50,7 +50,7 @@ string QNumber::congDec(string a, string b)
 	string c = "";
 	while (a.size() < b.size()) a = '0' + a;
 	while (b.size() < a.size()) b = '0' + b;
-	for (int i = a.size() - 1; i >= 0; --i) {
+	for (int i = (int)a.size() - 1; i >= 0; --i) {
 		sum = (a[i] - '0') + (b[i] - '0') + carry;
 		carry = sum / 10;
 		c = char('0' + sum % 10) + c;
@@ -88,7 +88,7 @@ string QNumber::truDec(string a, string b)
 	string c = "";
 	while (a.size() < b.size()) a = '0' + a;
 	while (b.size() < a.size()) b = '0' + b;
-	for (int i = a.size() - 1; i >= 0; --i) {
+	for (int i = (int)a.size() - 1; i >= 0; --i) {
 		int sum = a[i] - b[i] - borrow;
 		if (sum < 0) {
 			sum = sum + 10;
@@ -142,7 +142,7 @@ string toString(int dec) {
 	}
 
 	string res2;
-	for (int i = res.length() - 1; i >= 0; i--)
+	for (int i = (int)res.length() - 1; i >= 0; i--)
 		res2.push_back(res[i]);
 
 	if (dau) {
@@ -150,6 +150,11 @@ string toString(int dec) {
 	}
 
 	return res2;
+}
+
+string toString(double dec)
+{
+	return to_string(dec);
 }
 
 int valueOf(string s) {
@@ -162,18 +167,5 @@ int valueOf(string s) {
 			res += s[i] - '0';
 		}
 	}
-	return res;
-}
-
-string normalizeString(string s)
-{
-	string res;
-	if (s[0] != ' ')
-		res.push_back(s[0]);
-	for (int i = 1; i < s.length(); i++)
-		if (res[i] == ' ' && res[i - 1] == ' ')
-			continue;
-		else
-			res.push_back(s[i]);
 	return res;
 }

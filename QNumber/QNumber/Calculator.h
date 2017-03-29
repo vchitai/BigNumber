@@ -103,7 +103,7 @@ protected:
 	void handleQFloatFile();
 
 	//Bao Loi
-	string xuatLoi();
+	void xuatLoi();
 
 	//Xu ly xuat Ans
 	string xuatAns();

@@ -72,6 +72,30 @@ public:
 	//thuc hien phep dich bit qua phai
 	QInt shiftRight() const;
 
+	//thuc hien phep dich trai d bit
+	QInt shiftLeft(int d) const;
+
+	//thuc hien phep dich phai d bit
+	QInt shiftRight(int d) const;
+
+	//ham xoay phai
+	QInt ror() const;
+
+	//ham xoay trai
+	QInt rol() const;
+
+	//chuyen thap phan sang nhi phan nhu de bai yeu cau
+	bool* DecToBin(QInt x);
+
+	//chuyen nhi phan sang thap phan nhu de bai yeu cau
+	QInt BinToDec(bool *bit);
+
+	//chuyen nhi phan sang thap luc phan nhu de bai yeu cau
+	char* BinToHex(bool *bit);
+
+	//chuyen thap phan sang thap luc phan nhu de bai yeu cau
+	char* DecToHex(QInt x);
+
 	//Cac ham phep tinh tren QInt (thuc hien tren co so 2)
 	QInt operator + (const QInt& number) const;
 	QInt operator - (const QInt& number) const;

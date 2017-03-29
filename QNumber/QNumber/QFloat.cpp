@@ -148,7 +148,7 @@ SoThapPhan QFloat::valueOf(string thapPhan, string mu) {
 			res.thapPhan += thapPhan[j] - '0';
 		}
 	}
-	for (int k = thapPhan.size() - 1; k > j; k--) {
+	for (int k = (int)thapPhan.size() - 1; k > j; k--) {
 		sauDauPhay += thapPhan[k] - '0';
 		sauDauPhay /= 10;
 	}
@@ -790,6 +790,28 @@ bool QFloat::equalTo0() const
 	return (number_0 == 127);
 }
 
+QFloat QFloat::BinToDec(bool * bit)
+{
+	string s = "";
+	for (int i = 0; i < 128; ++i)
+		s = s + (bit[i] ? '1' : '0');
+
+	SoThapPhan temp = BinToDec(s);
+
+
+	QFloat res(10, toString(temp.thapPhan), toString(temp.luyThua));
+	return res;
+}
+
+bool * QFloat::DecToBin(QFloat x)
+{
+	bool* res = new bool[128];
+	string s = x.getBin();
+	for (int i = 0; i < 128; ++i)
+		res[i] = (s[i] == '0' ? false : true);
+	return res;
+}
+
 int QFloat::getExpo() const
 {
 	int res = 0;
@@ -815,18 +837,4 @@ string QFloat::getSignificand() const
 	}
 
 	return res;
-}
-
-string QFloat::getOutBin(string bin)
-{
-	while (bin.size() > 0 && bin[0] == '0') bin.erase(0, 1);
-	if (bin.size() == 0) bin = "0";
-	return bin;
-}
-
-string QFloat::getOutHex(string bin)
-{
-	while (bin.size() > 0 && bin[0] == '0') bin.erase(0, 1);
-	if (bin.size() == 0) bin = "0";
-	return bin;
 }

@@ -61,6 +61,12 @@ public:
 	//kiem tra QFloat co bang khong
 	bool equalTo0() const;
 
+	//chuyen tu nhi phan sang thap phan theo yeu cau
+	QFloat BinToDec(bool *bit);
+
+	//chuyen tu thap phan sang nhi phan theo yeu cau
+	bool* DecToBin(QFloat x);
+
 	//lay gia tri thap phan cua phan mu
 	int getExpo() const;
 
@@ -73,9 +79,6 @@ public:
 	QFloat operator / (const QFloat& number) const;
 
 	QFloat& operator = (const QFloat& number);
-
-	string getOutBin(string bin);
-	string getOutHex(string bin);
 
 	~QFloat();
 };

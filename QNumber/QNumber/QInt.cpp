@@ -23,6 +23,7 @@ QInt::QInt()
 
 QInt::QInt(int so, string input) {
 	setCoSo(so);
+	// Kiem tra tran so
 	string realValue;
 
 	switch (coSo)
@@ -106,7 +107,7 @@ string QInt::BinToHex(string bin)
 string QInt::DecToBin(string dec)
 {
 	string bin = "";
-	int i = luyThua2.size() - 1;
+	int i = (int)luyThua2.size() - 1;
 	int dau = 0;
 	if (dec[0] == '-') {
 		i--;
@@ -171,8 +172,8 @@ string QInt::chuanHoaBin(string bin) {
 	string res = "";
 	for (int i = 0; i < MAX_BITS; i++)
 		res.append("0");
-	int resSize = res.size();
-	int binSize = bin.size();
+	int resSize = (int)res.size();
+	int binSize = (int)bin.size();
 	for (int i = 0; i < binSize; i++)
 		res[resSize - binSize + i] = bin[i];
 
@@ -264,6 +265,77 @@ QInt QInt::shiftRight() const
 		preBit = current_bit;
 	}
 
+	return res;
+}
+
+QInt QInt::shiftLeft(int d) const
+{
+	QInt res = *this;
+	for (int i = 1; i <= d; ++i)
+		res = res.shiftLeft();
+	return res;
+}
+
+QInt QInt::shiftRight(int d) const
+{
+	QInt res = *this;
+	for (int i = 1; i <= d; ++i)
+		res = res.shiftRight();
+	return res;
+}
+
+QInt QInt::ror() const
+{
+	QInt res = *this;
+	int temp = res.getBit(0);
+	res = res.shiftRight();
+	res.ganBit(127, temp);
+	return res;
+}
+
+QInt QInt::rol() const
+{
+	QInt res = *this;
+	int temp = res.getBit(127);
+	int temp2 = res.getBit(126);
+	res = res.shiftLeft();
+	res.ganBit(0, temp);
+	res.ganBit(127, temp2);
+	return res;
+}
+
+bool * QInt::DecToBin(QInt x)
+{
+	string s = x.getBin();
+	bool * res = new bool[128];
+	
+	for (int i = 0; i < 128; ++i)
+		res[i] = (s[i] == '0' ? false : true);
+	return res;
+}
+
+QInt QInt::BinToDec(bool * bit)
+{
+	string temp = "";
+	for (int i = 0; i < 128; ++i)
+		temp = temp + (bit[i] ? '1' : '0');
+	return QInt(2, temp);
+}
+
+char * QInt::BinToHex(bool * bit)
+{
+	string temp = "";
+	for (int i = 0; i < 128; ++i)
+		temp = temp + (bit[i] ? '1' : '0');
+	return DecToHex(QInt(2, temp));
+}
+
+char * QInt::DecToHex(QInt x)
+{
+	string temp = x.getHex();
+	char* res = new char[temp.size()];
+	for (int i = 0; i < (int)temp.size(); ++i)
+		res[i] = temp[i];
 	return res;
 }
 

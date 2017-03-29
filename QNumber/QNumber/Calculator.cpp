@@ -627,7 +627,7 @@ void Calculator::start()
 	{
 		system("cls");
 		system("Color FC");
-		while (Error.size()>0)
+		while (Error.size() > 0)
 			cout << xuatLoi() << endl;
 		callMenu();
 		cout << "Input Command: ";
@@ -776,7 +776,22 @@ void Calculator::handleQIntFile()
 							continue;
 						}
 						QInt res = term1.ror();
-						ofile << res.getValue();
+						ofile << res.getValue() << endl;
+					}
+					else {
+						Error.push_back(ERROR_INVALID_INPUT);
+						continue;
+					}
+				}
+				else if (token[1] == "rol") {
+					if (isQIntConvertValid(token[2])) {
+						QInt term1(coSo, token[2]);
+						if (term1.getCoSo() == -1) {
+							Error.push_back(ERROR_BUFFER_OVERFLOW);
+							continue;
+						}
+						QInt res = term1.rol();
+						ofile << res.getValue() << endl;
 					}
 					else {
 						Error.push_back(ERROR_INVALID_INPUT);
@@ -791,7 +806,7 @@ void Calculator::handleQIntFile()
 							continue;
 						}
 						QInt res = ~term1;
-						ofile << res.getValue();
+						ofile << res.getValue() << endl;
 					}
 					else {
 						Error.push_back(ERROR_INVALID_INPUT);

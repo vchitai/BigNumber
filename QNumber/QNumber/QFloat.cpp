@@ -564,7 +564,7 @@ QFloat QFloat::operator-(const QFloat & number) const
 	QFloat b = number;
 	QFloat a = *this;
 
-	b.ganBit(127, 1 - b.getBit(0));
+	b.ganBit(127, 1 - b.getBit(127));
 	return a + b;
 }
 

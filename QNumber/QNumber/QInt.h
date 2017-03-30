@@ -15,26 +15,16 @@ public:
 	QInt();
 	QInt(const QInt &number);
 
-	//Check xem nguoi dung nhap cac he 2, 10 hay 16, luu tru vao coSo
-	//Sau do dung ham tuong ung de chuyen ve he 2.
-	//Sau khi chuyen ve he 2, chuyen du lieu bit luu vao data.
-	//Luu y: cach bieu dien chuoi nhi phan <string> khac voi cach bieu dien nhi phan trong char data[16]
-	//string luu bit cao nhat (bit 127) tai vi tri 0
-	//char data[16] luu bit cao nhat (bit 127) o bit thu 7 cua data[15]
+	//Khoi tao tu chuoi input
 	QInt(int so, string input);
 
 	//chuyen tu chuoi nhi phan (2) <bit> sang thap phan (10)
-	//Luu y: So co dau, bit dau tien luu dau
-	//Ham cong va tru so nguyen lon yeu cau a va b deu la so nguye duong.
-	//Nen tinh so mu sau cung.
 	string BinToDec(string bin);
 
 	//chuyen tu chuoi nhi phan (2) <bit> sang thap luc phan (16)
-	//Search ro hon ve chuyen tu nhi phan sang thap luc phan
 	string BinToHex(string bin);
 
 	//chuyen tu chuoi thap phan (10) <dec> sang nhi phan (2)
-	//Luu y dau cua so thap phan, chuyen ve chuoi nhi phan chuan
 	string DecToBin(string dec);
 
 	//chuyen tu chuoi thap luc phan (16) <hex> sang nhi phan (2)
@@ -47,17 +37,13 @@ public:
 	char getBit(int pos) const;
 
 	//ham lay bieu dien cua QInt hien tai thanh chuoi nhi phan (2)
-	//Luu y: cach bieu dien chuoi nhi phan <string> khac voi cach bieu dien nhi phan trong char data[16]
 	//string luu bit cao nhat tai vi tri 0
-	//char data[16] luu bit cao nhat o bit thu 7 cua data[15]
 	string getBin();
 
 	//ham lay bieu dien cua QInt hien tai thanh chuoi thap phan (10) 
-	//Luu y: tan dung ham BinToDec(), goi ham getBin() sau do su dung ham BinToDec
 	string getDec();
 
 	//ham lay bieu dien cua QInt hien tai thanh chuoi thap luc phan (16)
-	//Luu y: tan dung ham BinToHex(), goi ham getBin() sau do su dung ham BinToHex
 	string getHex();
 
 	//lay gia tri cua QInt hien tai (bieu dien theo coSo hien tai)

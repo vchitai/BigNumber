@@ -7,7 +7,7 @@
 
 using namespace std;
 
-//Truong define may cai gioi han vo day
+//Cac gioi han
 #define BIN 2
 #define DEC 10
 #define EXPO 15

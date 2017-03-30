@@ -49,12 +49,6 @@ QInt::QInt(int so, string input) {
 
 }
 
-//Check xem nguoi dung nhap cac he 2, 10 hay 16, luu tru vao coSo
-//Sau do dung ham tuong ung de chuyen ve he 2.
-//Sau khi chuyen ve he 2, chuyen du lieu bit luu vao data.
-//Luu y: cach bieu dien chuoi nhi phan <string> khac voi cach bieu dien nhi phan trong char data[16]
-//string luu bit cao nhat (bit 127) tai vi tri 0
-//char data[16] luu bit cao nhat (bit 127) o bit thu 7 cua data[15]
 QInt::QInt(const QInt & number)
 {
 	for (int i = 0; i < 16; ++i)
@@ -63,9 +57,6 @@ QInt::QInt(const QInt & number)
 }
 
 //chuyen tu chuoi nhi phan (2) <bit> sang thap phan (10)
-//Luu y: So co dau, bit dau tien luu dau
-//Ham cong va tru so nguyen lon yeu cau a va b deu la so nguye duong.
-//Nen tinh so mu sau cung.
 string QInt::BinToDec(string bin)
 {
 	string kq = "0";
@@ -78,7 +69,6 @@ string QInt::BinToDec(string bin)
 }
 
 //chuyen tu chuoi nhi phan (2) <bit> sang thap luc phan (16)
-//Search ro hon ve chuyen tu nhi phan sang thap luc phan
 string QInt::BinToHex(string bin)
 {
 	string binary[16] = { "0000", "0001", "0010", "0011", "0100", "0101", "0110", "0111", "1000", "1001", "1010", "1011", "1100", "1101", "1110", "1111" };
@@ -103,7 +93,6 @@ string QInt::BinToHex(string bin)
 }
 
 //chuyen tu chuoi thap phan (10) <dec> sang nhi phan (2)
-//Luu y dau cua so thap phan, chuyen ve chuoi nhi phan chuan
 string QInt::DecToBin(string dec)
 {
 	string bin = "";
@@ -189,9 +178,7 @@ char QInt::getBit(int pos) const
 }
 
 //ham lay bieu dien cua QInt hien tai thanh chuoi nhi phan (2)
-//Luu y: cach bieu dien chuoi nhi phan <string> khac voi cach bieu dien nhi phan trong char data[16]
 //string luu bit cao nhat tai vi tri 0
-//char data[16] luu bit cao nhat o bit thu 7 cua data[15]
 string QInt::getBin()
 {
 	string kq = "";
@@ -201,14 +188,12 @@ string QInt::getBin()
 }
 
 //ham lay bieu dien cua QInt hien tai thanh chuoi thap phan (10) 
-//Luu y: tan dung ham BinToDec(), goi ham getBin() sau do su dung ham BinToDec
 string QInt::getDec()
 {
 	return BinToDec(getBin());
 }
 
 //ham lay bieu dien cua QInt hien tai thanh chuoi thap luc phan (16)
-//Luu y: tan dung ham BinToHex(), goi ham getBin() sau do su dung ham BinToHex
 string QInt::getHex()
 {
 	return BinToHex(getBin());
